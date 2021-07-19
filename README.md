@@ -6,4 +6,4 @@
 <img align="left" alt="GitHub" width="30px" src="icons/github.svg" />
 <img align="left" alt="VS Code" width="30px" src="icons/vscode.svg" />
 <img align="left" alt="Circle CI" width="30px" src="icons/circleci.svg" />
-<img align="left" alt="LateX" width="50px" src="icons/LaTeX.svg" />
+<img align="left" alt="LateX" width="60px" src="icons/LaTeX.svg" />
