@@ -3,6 +3,8 @@
   <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_triangle.png" />
 </a>
 
+<href/>
+
 ### Languages and Tools:
 <a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">
   <img align="left" alt="C++" width="30px" src="icons/cpp.svg" />
