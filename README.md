@@ -1,3 +1,6 @@
+### Interests
+
+
 ### Languages and Tools:
 <img align="left" alt="C++" width="30px" src="icons/cpp.svg" />
 <img align="left" alt="Terminal" width="30px" src="icons/terminal.svg" />
