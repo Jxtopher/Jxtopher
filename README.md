@@ -1,5 +1,7 @@
 ### Interests
-
+<a href="*">
+  <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_triangle.png" />
+</a>
 
 ### Languages and Tools:
 <a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">
