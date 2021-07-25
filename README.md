@@ -2,7 +2,9 @@
 
 
 ### Languages and Tools:
-<img align="left" alt="C++" width="30px" src="icons/cpp.svg" />
+<a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">
+  <img align="left" alt="C++" width="30px" src="icons/cpp.svg" />
+</a>
 <img align="left" alt="Terminal" width="30px" src="icons/terminal.svg" />
 <img align="left" alt="Python" width="30px" src="icons/python.svg" />
 <img align="left" alt="Git" width="30px" src="icons/git.svg" />
