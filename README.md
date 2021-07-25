@@ -1,5 +1,5 @@
 ### Interests
-<a href="*">
+<a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">
   <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_triangle.png" />
 </a>
 
