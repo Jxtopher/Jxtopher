@@ -2,6 +2,9 @@
 <a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">
   <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_triangle_40.png" />
 </a>
+<a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_carpet">
+  <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_carpet.png" />
+</a>
 
 <br>
 <br>
