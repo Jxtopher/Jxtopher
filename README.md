@@ -5,6 +5,10 @@
 <a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_carpet">
   <img align="left" alt="C++" width="100px" src="figs/interests/sierpinski_carpet.png" />
 </a>
+<a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_de_bin_packing">
+  <img align="left" alt="C++" width="100px" src="figs/interests/binpacking2d.png" />
+</a>
+
 
 <br>
 <br>
