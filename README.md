@@ -8,7 +8,9 @@
 <a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_de_bin_packing">
   <img align="left" alt="C++" width="100px" src="figs/interests/binpacking2d.png" />
 </a>
-
+<a href="https://fr.wikipedia.org/wiki/L-Syst%C3%A8me">
+  <img align="left" alt="C++" width="100px" src="figs/interests/plant.png" />
+</a>
 
 <br>
 <br>
