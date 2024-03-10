@@ -1,0 +1,48 @@
+# Initramfs mode
+
+{bdg-primary-line}`2010`
+
+Initramfs is a rescue mode that can be used in many kinds situations for troubleshooting of the operating system when the boot phase is broken.
+
+The Goal is to restore the binary file `mount`.
+
+The idea is to restore the mount binary file. It is located in the `/bin` folder. It is an essential file for starting the GNU/Linux operating system. We are going to do this test with a virtual machine: virtualBox type. The idea is to use whatever we have on hand, the operating system, the network (to download the mount binary file). We must not use a CD-ROM, or a USB stick that can contain the mount.
+
+## Remove `mount` file
+
+boot and remove mount
+
+```bash
+sudo cp /bin/cat  /bin/mount
+reboot
+```
+
+## Boot in `initramfs` mode
+
+Boot booter in `initramfs` mode, You must edit the `kernel` line which is located in the grub menu and boot afterwards.
+
+```bash
+linux /boot/vmlinuz-2.x.x-x-generic root=1
+```
+
+After booting in initramfs mode. 
+You end up with a prompt. 
+It is a rescure operating system that allows you to do basic tasks. 
+Here are the steps to follow:
+
+```bash
+mount -t ext4 /dev/sda1 /root/
+cp /bin/mount /root/bin/mount
+reboot
+```
+With this three lines you have put the operating system back into service without any external help. 
+You could do much more, for example you could do a chroot and do whatever commands you wanted.
+
+
+## Restoring the mount package
+
+We have booted normally, we will restore the mount package.
+
+```bash
+sudo apt install --reinstall mount
+```
