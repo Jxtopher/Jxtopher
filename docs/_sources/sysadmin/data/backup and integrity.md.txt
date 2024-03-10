@@ -1,0 +1,120 @@
+# Backup and integrity
+
+{bdg-primary-line}`2024`
+
+## Checking file integrity
+
+Some tools to calculate the hash: cksum, sha512sum, sha256sum, sha1sum or md5sum
+
+Compute checksum
+
+```bash
+sha512sum nom_du_fichier.iso > sha512
+sha256sum nom_du_fichier.iso > sha256
+sha1sum nom_du_fichier.iso > sha1
+md5sum nom_du_fichier.iso > md5
+find path/directory/ -type f -exec md5sum {} \; >$(date +'%Y-%m-%d')-interity.md5
+find path/directory/ -type f -exec cksfv {} \; >$(date +'%Y-%m-%d')-interity.cks
+```
+
+Check of checksum
+
+```bash
+sha512sum -c sha512
+sha256sum -c sha256
+sha1sum -c sha1
+md5sum -c md5
+```
+
+## Remote synchronization with `rsync`
+
+- Building a mirror of a website
+
+```bash
+rsync -avz --delete-after master.squid-cache.org::http-files  /your/path
+```
+
+## `dar` : backup with Disk Archive
+
+Full-backup, simple example:
+
+```bash
+dar -c ldap -R ldap/
+```
+
+The directory `ldap/` is backup entirely in a archive `ldap.1.dar`.
+Option `-c` percise the distination path of the file and the R option is the directory to save.
+
+## `Parchive` with error corrector
+
+The tool for Windows is `MultiPar`
+
+Create a recovery with $7\%$ of redundancy for a file
+
+```bash
+par2 create -r7 file
+```
+
+Create a recovery with $7\%$ of redundancy for a directory or sub-directory
+
+```bash
+par2 create -r7 -R mydirectory/*
+```
+
+Check the integrity of file
+
+```bash
+par2 verify file
+```
+
+Repair a damaged file
+
+```bash
+par2 repair file
+```
+
+## High compression
+
+The benefits of using `XZ` for compression is high compression ratio, helatively fast decompression speed and multi-threaded compression and decompression.
+Due to a risk of data corruption,
+the long-term data storage this compression method is not suitable unless combined with redundancy (like `Parchive` or `ZFS`) and periodic integrity check.
+
+- Before the compression cleanup the directory
+
+```bash
+# Delete All Empty Directories
+find . -empty -type d -delete
+# Delete Empty Files in a Directory
+find . -type f -empty -print -delete
+```
+
+- Compression (`-9` for best compression, `-v` for verbose, `-T` for number of threads)
+
+```bash
+tar cvf archive.tar.xz --use-compress-program='xz -9 -v -T 8' your-directory
+```
+
+- Integrity check
+
+```bash
+xz -t -v -T 8 your-directory
+```
+
+- Decompression
+
+```bash
+tar xJf archive.tar.xz
+```
+
+## How storage data
+
+```{figure} backup-and-integrity/cold-storage-of-data.svg
+:alt: Cold storage of data
+:class: bg-primary
+:width: 300px
+:align: center
+```
+
+## Refs
+
+- Peazip pour windows
