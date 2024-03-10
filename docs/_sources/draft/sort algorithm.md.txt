@@ -1,0 +1,123 @@
+# Sort algorithm
+
+```{attention}
+The majority of sorting algorithms are taken from 'The Algorithms'.
+Except the Timsort and of course the one taken from the standard lib.
+The quality of the implementations may vary, the results can still be informative, but require careful consideration.
+```
+
+## Comparison of different algorithms
+
+List of algorithms used in this experimentation: 
+[comb_sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/comb_sort.cpp)
+[count inversions](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/count_inversions.cpp)
+[heap sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/heap_sort.cpp)
+[merge insertion sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/merge_insertion_sort.cpp)
+[non recursive merge sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/non_recursive_merge_sort.cpp)
+[quick sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/quick_sort.cpp)
+[shell sort](https://github.com/TheAlgorithms/C-Plus-Plus/blob/master/sorting/shell_sort2.cpp)
+[timsort](https://es.acervolima.com/timsort/) 
+
+
+Note for the **timsort** the implementation have an issue because above sample size 2700000 cause segmentation fault. We need a better implementation to have a more reliable comparison.
+
+
+
+```{list-table} Condition of experimentation
+:header-rows: 1
+:name: condition-of-experimentation
+
+* - Characteristic
+  - value
+* - Sample size
+  - 400000
+* - CPU
+  - i3-6100 CPU @ 3.70GHz
+* - Compilateor
+  - g++ -O2
+```
+
+```{table} Running time in milliseconds of sorting algorithms depending on sample type and a sample size of 400000
+:name: running-time
+
+| Sorting algorithm        |       uniform      |         same values    |       ordered list asc      |       ordered list desc      |
+|:-------------------------|-------------------:|-----------------------:|----------------------------:|-----------------------------:|
+| binary insertion sort    |          3663      |            3630.2      |                    7.53     |                   7665.6     |
+| comb sort                |            38.73   |              13.53     |                   13.5      |                     15       |
+| count inversions         |            34.33   |               9.93     |                   10.13     |                      9.333   |
+| cycle sort               |        162953      |           79201.1      |                78849        |                  87301.6     |
+| gnome sort               |        261070      |               0.66     |                    0.73     |                 522926       |
+| heap sort                |            36.4    |               1.4      |                   23.86     |                     23.4     |
+| insertion sort           |         13803.8    |               0.4      |                    0.46     |                  27738.3     |
+| mergeSort                |            53.8    |              27.0667   |                   27        |                     24.73    |
+| non recursive merge sort |            29.8    |               7.46     |                    7.6      |                      7.13    |
+| odd even sort            |        135419      |             **0.33**   |                  **0.26**   |                  55129.1     |
+| pancake sort             |         82215.8    |           45024.4      |                45037.2      |                  45014.9     |
+| quick sort               |            26.8    |           54273.1      |                53567.8      |                  48985.7     |
+| recursive bubble sort    |        352797      |           50576.5      |                49044.4      |                 393059       |
+| shell sort               |            75.8    |               5.46     |                    5.26     |                     87.46    |
+| stl_algo sort            |          **26.06** |               5.6      |                    4.26     |                    **3.46**  |
+| timsort                  |            27.26   |               3.93     |                    3.93     |                      7.46    |
+```
+
+
+## Impact of sample size on the performance
+
+```{subfigure} AB
+:layout-sm: A|B
+:gap: 10px
+:align: center
+:width: 95%
+![](sort-algorithm/sample-size-vs-perf-merge_sort.png)
+![](sort-algorithm/sample-size-vs-perf-quick_sort.png)
+
+
+In left merge sort and in right quick sort
+```
+
+```{subfigure} AB
+:layout-sm: A|B
+:gap: 10px
+:align: center
+:width: 95%
+![](sort-algorithm/sample-size-vs-perf-stl_algo_sort.png)
+![](sort-algorithm/sample-size-vs-perf-tim_sort.png)
+
+In left stl_algo_sort and in right timsort
+```
+
+## Definition of mixing rate
+
+The mixing rate of the sample is defined by the sum of items distances between a mixing vector and the sorted vector divided by the sum of distances in worst case.
+
+```python
+def mixing_rate(vec: list) -> float:
+    sorted_vector = sorted(vec)
+    distance = []
+    for index, value in enumerate(sorted_vector):
+        distance.append(abs(index - vec.index(value)))
+    return 2 * np.sum(distance) / len(vec) ** 2
+```
+
+
+```{subfigure} A
+:layout-sm: A
+:class: bg-primary
+:align: center
+![](sort-algorithm/mixing_rate_vs_number_of_swaps.svg)
+
+Sample size = 100 and sample type is uniform
+```
+
+
+
+
+- Plot: mixing rate vs. running-time
+
+
+
+
+
+
+For publication?
+ - https://www.ijcaonline.org/
