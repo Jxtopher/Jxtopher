@@ -1,0 +1,201 @@
+# Call function in C
+
+{bdg-primary-line}`2010`
+
+
+## Windows
+
+### Function call with dynamic library
+
+Every function is contained either in a static or dynamic library.
+When the library is loaded dynamically, the program loader uses the following primitives:
+
+* LoadLibrary
+* GetProcAddress
+* FreeLibrary
+
+this primitives are include the library `windows.h`.
+
+
+Example with function call `MessageBox`:
+
+```c
+#include <windows.h>
+
+typedef int (WINAPI* _MessageBoxA)(HWND, LPSTR, LPSTR, UINT);
+
+int main() {
+    HMODULE hUser32 = NULL;
+    _MessageBoxA __MessageBoxA = NULL;
+
+    hUser32 = LoadLibraryA("user32.dll");
+    __MessageBoxA = (_MessageBoxA) GetProcAddress(hUser32, "MessageBoxA");
+
+    __MessageBoxA(NULL, "Hello world", "Information", 64);
+
+    FreeLibrary(hUser32);
+    return 0;
+}
+```
+
+Example with calling the function with a `printf` :
+
+```c
+#include <windows.h>
+
+typedef int (WINAPI *_printf)();
+
+int main (int argc, char argv) {
+    HMODULE hMsvcrt = NULL;
+    _printf __printf = NULL;
+
+    hMsvcrt = LoadLibraryA("msvcrt.dll");
+
+    __printf = (_printf) GetProcAddress(hMsvcrt, "printf");
+
+    __printf("L\'adresse de printf est : %X",__printf);
+
+    FreeLibrary(hMsvcrt);
+
+    return 0;
+}
+```
+
+### Function call with static library
+
+Example with an `add` function defined:
+
+```c
+#include <stdio.h>
+
+typedef int (*_add) (int,int);
+
+int add(int nb, int nb1) {
+    return nb + nb1;
+}
+
+int main() {
+    int total = add(5,5);
+
+    _add __add = (int)&add;
+
+    total = __add(5,5);
+    printf("%d", total);
+
+    return 0;
+}
+```
+
+With a function in a dynamic library
+
+```c
+#include <windows.h>
+
+typedef int (*_printf)();
+
+int main() {
+    _printf __printf = 0x77C1186A;
+    __printf("Hello world !");
+
+    return 0;
+}
+```
+
+## Linux
+
+
+###  Function call with dynamic library
+
+Any function can be called dynamically using the following primitives:
+* dlopen
+* dlsym
+* dlclose
+
+
+To use its primitive include the following file `dlfcn.h`.
+
+
+### Function call with static library
+
+With the `add` function
+
+```c
+#include <stdio.h>
+
+typedef int (*_add)(int, int);
+
+int add(int nb, int nb2) {
+    return nb + nb2;
+}
+
+int main(int argc, char argv) {
+    int total;
+
+    _add __add = NULL;
+    __add = &add;
+
+    total = __add(5,5);
+    printf("%d",total);
+    return 0;
+}
+```
+
+### How compilation
+
+* Example of library
+
+```c
+// file : libprintf.c
+#include <stdio.h>
+
+void myPrintf(char *chaine) {
+    printf("%s", chaine);
+}
+```
+
+Le fichier `.h`
+
+```c
+// file : libprintf.h
+void myPrintf(char *chaine);
+```
+
+* Compiling the library statically
+
+```bash
+gcc -c libprintf.c -o libprintf.o
+ar rcs libprintf.a libprintf.o
+```
+
+* Creating a dynamic library
+
+```bash
+gcc -c -fPIC libprintf.c -o libprintf.o
+gcc -shared -Wl -o libprintf.so.1.0.1  libprintf.o
+```
+
+
+* Using the library
+
+```c
+// file : main.c
+#include <stdio.h>
+#include "libprintf.h"
+
+int main(int argc, char argv) {
+    myPrintf("Hello world");
+    return 0;
+}
+```
+
+* Link between static library and user program
+
+```bash
+gcc -static main.c -L. c_printf.a -o statically_linked
+```
+
+* Link between dynamic library and user program
+
+```bash
+gcc main.c -o dynamically_linked -L -l c_printf.so.1.0.1
+```

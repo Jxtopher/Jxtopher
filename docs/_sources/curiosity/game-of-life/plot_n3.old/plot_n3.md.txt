@@ -1,0 +1,294 @@
+# n = 3, count = 512
+
+The initial configuration is a square of side 3, which implies $2^{3*3}$ possible combination.
+But to seek unique dynamics, we need break symmetries and translation.
+
+
+Below the automaton dynamics with unique configuration (however,  there are still similar configurations left).
+
+```{image} 00007.gif
+:width: 15.0%
+```
+```{image} 00011.gif
+:width: 15.0%
+```
+```{image} 00015.gif
+:width: 15.0%
+```
+```{image} 00019.gif
+:width: 15.0%
+```
+```{image} 00023.gif
+:width: 15.0%
+```
+```{image} 00026.gif
+:width: 15.0%
+```
+```{image} 00027.gif
+:width: 15.0%
+```
+```{image} 00029.gif
+:width: 15.0%
+```
+```{image} 00030.gif
+:width: 15.0%
+```
+```{image} 00043.gif
+:width: 15.0%
+```
+```{image} 00052.gif
+:width: 15.0%
+```
+```{image} 00056.gif
+:width: 15.0%
+```
+```{image} 00057.gif
+:width: 15.0%
+```
+```{image} 00058.gif
+:width: 15.0%
+```
+```{image} 00063.gif
+:width: 15.0%
+```
+```{image} 00079.gif
+:width: 15.0%
+```
+```{image} 00085.gif
+:width: 15.0%
+```
+```{image} 00087.gif
+:width: 15.0%
+```
+```{image} 00088.gif
+:width: 15.0%
+```
+```{image} 00094.gif
+:width: 15.0%
+```
+```{image} 00095.gif
+:width: 15.0%
+```
+```{image} 00102.gif
+:width: 15.0%
+```
+```{image} 00103.gif
+:width: 15.0%
+```
+```{image} 00105.gif
+:width: 15.0%
+```
+```{image} 00107.gif
+:width: 15.0%
+```
+```{image} 00110.gif
+:width: 15.0%
+```
+```{image} 00111.gif
+:width: 15.0%
+```
+```{image} 00113.gif
+:width: 15.0%
+```
+```{image} 00114.gif
+:width: 15.0%
+```
+```{image} 00115.gif
+:width: 15.0%
+```
+```{image} 00118.gif
+:width: 15.0%
+```
+```{image} 00121.gif
+:width: 15.0%
+```
+```{image} 00122.gif
+:width: 15.0%
+```
+```{image} 00150.gif
+:width: 15.0%
+```
+```{image} 00153.gif
+:width: 15.0%
+```
+```{image} 00166.gif
+:width: 15.0%
+```
+```{image} 00167.gif
+:width: 15.0%
+```
+```{image} 00170.gif
+:width: 15.0%
+```
+```{image} 00171.gif
+:width: 15.0%
+```
+```{image} 00175.gif
+:width: 15.0%
+```
+```{image} 00179.gif
+:width: 15.0%
+```
+```{image} 00181.gif
+:width: 15.0%
+```
+```{image} 00186.gif
+:width: 15.0%
+```
+```{image} 00187.gif
+:width: 15.0%
+```
+```{image} 00188.gif
+:width: 15.0%
+```
+```{image} 00189.gif
+:width: 15.0%
+```
+```{image} 00191.gif
+:width: 15.0%
+```
+```{image} 00201.gif
+:width: 15.0%
+```
+```{image} 00202.gif
+:width: 15.0%
+```
+```{image} 00209.gif
+:width: 15.0%
+```
+```{image} 00210.gif
+:width: 15.0%
+```
+```{image} 00229.gif
+:width: 15.0%
+```
+```{image} 00236.gif
+:width: 15.0%
+```
+```{image} 00238.gif
+:width: 15.0%
+```
+```{image} 00239.gif
+:width: 15.0%
+```
+```{image} 00240.gif
+:width: 15.0%
+```
+```{image} 00245.gif
+:width: 15.0%
+```
+```{image} 00247.gif
+:width: 15.0%
+```
+```{image} 00255.gif
+:width: 15.0%
+```
+```{image} 00278.gif
+:width: 15.0%
+```
+```{image} 00294.gif
+:width: 15.0%
+```
+```{image} 00306.gif
+:width: 15.0%
+```
+```{image} 00309.gif
+:width: 15.0%
+```
+```{image} 00312.gif
+:width: 15.0%
+```
+```{image} 00327.gif
+:width: 15.0%
+```
+```{image} 00331.gif
+:width: 15.0%
+```
+```{image} 00335.gif
+:width: 15.0%
+```
+```{image} 00341.gif
+:width: 15.0%
+```
+```{image} 00343.gif
+:width: 15.0%
+```
+```{image} 00345.gif
+:width: 15.0%
+```
+```{image} 00346.gif
+:width: 15.0%
+```
+```{image} 00351.gif
+:width: 15.0%
+```
+```{image} 00367.gif
+:width: 15.0%
+```
+```{image} 00368.gif
+:width: 15.0%
+```
+```{image} 00379.gif
+:width: 15.0%
+```
+```{image} 00383.gif
+:width: 15.0%
+```
+```{image} 00395.gif
+:width: 15.0%
+```
+```{image} 00400.gif
+:width: 15.0%
+```
+```{image} 00410.gif
+:width: 15.0%
+```
+```{image} 00412.gif
+:width: 15.0%
+```
+```{image} 00419.gif
+:width: 15.0%
+```
+```{image} 00421.gif
+:width: 15.0%
+```
+```{image} 00423.gif
+:width: 15.0%
+```
+```{image} 00424.gif
+:width: 15.0%
+```
+```{image} 00428.gif
+:width: 15.0%
+```
+```{image} 00445.gif
+:width: 15.0%
+```
+```{image} 00458.gif
+:width: 15.0%
+```
+```{image} 00459.gif
+:width: 15.0%
+```
+```{image} 00460.gif
+:width: 15.0%
+```
+```{image} 00468.gif
+:width: 15.0%
+```
+```{image} 00478.gif
+:width: 15.0%
+```
+```{image} 00480.gif
+:width: 15.0%
+```
+```{image} 00492.gif
+:width: 15.0%
+```
+```{image} 00495.gif
+:width: 15.0%
+```
+```{image} 00511.gif
+:width: 15.0%
+```
+```{image} 

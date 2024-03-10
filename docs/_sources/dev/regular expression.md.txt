@@ -1,0 +1,30 @@
+# Regular expression
+
+{bdg-primary-line}`2010`
+
+## Some examples with egrep
+
+
+* IPv4 address
+
+```
+([0-9]{1,3}\.){3}[0-9]{1,3}
+```
+
+* MAC address
+
+```
+([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}
+```
+
+* E-mail address
+
+```
+([a-zA-Z0-9]+(([\.\-\_]?[a-zA-Z0-9]+)+)?)\@(([a-zA-Z0-9]+[\.\-\_])+[a-zA-Z]{2,4})
+```
+
+* URL
+
+```
+(ftps?|https?)://[a-zA-Z0-9:/._=&~,?-]+
+```

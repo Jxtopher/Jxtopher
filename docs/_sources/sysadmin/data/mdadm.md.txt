@@ -1,0 +1,214 @@
+# Software raid - mdadm
+
+{bdg-primary-line}`2010`
+{bdg-primary-line}`Archive`
+
+```{danger}
+Create a backup of the data with the fingerprints before proceeding.
+```
+
+```{note}
+It is better to use zpool because it is used on a large scale in production, plus it is easier to configure, stable and reliable.
+```
+
+## Setup of RAID 1
+
+We assume that the two 500GB hard drives are identical and install, format in ext4.
+We configure them so that it is in raid 1
+
+Go to root
+
+```bash
+su -
+```
+
+Create a new logical devices
+
+```bash
+mknod /dev/md0 b 9 0
+```
+
+Install `mdadm`
+
+```bash
+apt install mdadm
+```
+
+Cluster creation. We indicate to mdadm the type of RAID we are doing (level = 1),
+the number of hard drives making up this cluster (raid-devices = 2),
+the name of the cluster (/dev/md0) and the partitions making up the cluster (/dev/sda1 and /dev/sdb1)
+
+
+```bash
+mdadm --create --verbose /dev/md0 --level=raid1 --raid-devices=2 /dev/sda1 /dev/sdb1
+```
+
+This displays
+
+```
+mdadm --create --verbose /dev/md1 --level=raid1 --raid-devices=2 /dev/sdb2 /dev/sdc2
+mdadm: /dev/sdb2 appears to contain an ext2fs file system
+   size=293065760K  mtime=Thu Jan  1 01:00:00 1970
+mdadm: /dev/sdc2 appears to contain an ext2fs file system
+   size=293065760K  mtime=Thu Jan  1 01:00:00 1970
+mdadm: size set to 293065664K
+   Continue creating array? y
+mdadm: array /dev/md1 started.
+```
+
+View raid status
+
+```bash
+mdadm --detail -scan
+```
+
+What should display this
+
+```bash
+ARRAY /dev/md0 level=raid1 num-devices=2 UID=b0be37d4:54202dc1:0e9efb29:244465d1
+```
+
+Now you have to wait for the raid to be built, you can see the **progress details** like this:
+
+```bash
+mdadm --detail /dev/md0
+```
+
+Mount the raid volume. 
+It is necessary to Save the characteristics of the cluster.
+
+```bash
+mdadm --detail --scan
+```
+
+The previous command shows us the following line
+
+```bash
+ARRAY /dev/md0 level=raid1 num-devices=2 metadata=00.90 UUID=c06c3k41:gk63de5c:4e5m5245:5ead0852
+```
+
+This line is added to the `/etc/mdadm/mdadm.conf` file,
+then you have to reboot the machine and enter everything in order
+
+### Delete a RAID volume
+
+Turn off the volume
+
+```bash
+sudo mdadm --stop /dev/md0\nsudo mdadm --remove /dev/md0
+```
+
+Remove superblocks
+
+```bash
+sudo mdadm --zero-seperblock /dev/sda1
+sudo mdadm --zero-seperblock /dev/sdb1
+```
+
+Check if the partitions have returned to "normal"
+
+```bash
+sudo mdadm --examine /dev/sda3\nmdadm : no md superberblock detected on /dev/sda3
+```
+
+You must then comment out the line concerning the cluster in the `etc/mdadm/mdadm.conf` file, otherwise there is an error when restarting.
+
+## Setting up RAID 5
+
+We assume that three identical 500GB hard drives are installed.
+We will configure them so that it is in Raid 5
+
+Run terminal as root
+
+```bash
+su -
+```
+
+Installing the `mdadm` package
+
+```bash
+apt install mdadm
+```
+Creating the Raid 5 volume
+
+```bash
+ mdadm --create --verbose /dev/md0 --level=5 --assume-clean --raid-devices=4 /dev/sd[bcd]
+```
+
+⚠ `--assume-clean`: prevents synchronization after creation. This synchronization can last tens of hours depending on the size of the raid and as part of a new creation we will in any case format the volume afterwards.
+
+Demonizing the RAID volume, 
+we will make the system load the volume at each startup:
+
+```bash
+mdadm --daemonise /dev/md0
+```
+Format raid volume
+
+```bash
+mkfs.ext4 -j /dev/md0
+```
+
+For automatic editing add in `/etc/fstab`
+
+```bash
+/dev/md0 	/media/raid	ext4	defaults	0	1
+```
+
+## Case study: loss of a disk
+
+When the raid group is in "degraded" mode (missing disk).
+It will be assembled but not started, to force it use "--run" in addition to the other options, or once the raid group is assembled
+
+```bash
+mdadm --run /dev/md0
+```
+Examine the cluster
+
+```bash
+mdadm --detail /dev/md0
+```
+
+Add the replacement disk
+
+```bash
+mdadm /dev/md0 --add /dev/sde
+```
+
+Removing the failed hard drive
+
+```bash
+mdadm /dev/md0 --fail /dev/sda\nmdadm /dev/md0 --remove /dev/sda
+```
+
+Check raid reconstruction. Do not restart the computer until raid is re-built.
+
+```bash
+mdadm --detail /dev/md0
+```
+
+## Case study: migrate data to a new machine
+
+Consider that you want to install a pre-existing cluster on a machine that does not have a RAID volume
+
+Install `mdadm`
+
+```bash
+apt install mdadm
+```
+Create a new FIFO file, identifier 0 may be different if it is already in use
+
+```bash
+mknod /dev/md0 b 9 0
+```
+
+Boot the old RAID as follows:
+
+```bash
+mdadm -A /dev/md1 --update=super-minor -m0 /dev/sd... /dev/sd...
+```
+
+To make the raid persistent
+```bash
+mdadm --daemonise /dev/md0
+```
