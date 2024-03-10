@@ -1,0 +1,24 @@
+---
+hide-toc: true
+---
+
+# Eggdoc
+
+```{toctree}
+:hidden:
+
+curiosity/index
+```
+
+```{toctree}
+:hidden:
+
+dev/index
+```
+
+```{toctree}
+:hidden:
+
+sysadmin/index
+```
+
