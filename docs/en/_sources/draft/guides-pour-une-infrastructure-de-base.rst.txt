@@ -1,0 +1,71 @@
+
+
+#########################################################
+Guides pour une infrastructure de base
+#########################################################
+
+
+Gateway/Passerelle
+****************************************************
+
+
+Mise en place d'un routage IP permanent
+
+Editer le fichier "/etc/sysctl.conf" et ajouter/décommenter la ligne
+
+.. code-block:: vim
+
+ net.ipv4.ip_forward=1
+
+Activer les changements effectués dans sysctl.conf
+
+.. code-block:: bash
+
+ sysctl -p /etc/sysctl.conf
+
+
+DHCP
+****
+
+Donner une adresse statique à une interface
+
+.. code-block:: vim
+
+ auto eth0
+ iface eth0 inet static
+     address 10.0.0.2
+     netmask 255.255.255.0
+     gateway 10.0.0.1
+
+Configured to listen on any interfaces, edit /etc/default/isc-dhcp-server file should have
+
+.. code-block:: vim
+ 
+ INTERFACES="eth0"
+
+Adresse statique
+
+.. code-block:: vim
+ 
+ subnet 10.0.0.0 netmask 255.255.255.0 {
+    option routers 10.0.0.1;
+ }
+
+ host web1 {
+    hardware ethernet 00:0C:29:3F:B7:65;
+    fixed-address 10.0.0.1;
+ }
+
+LDAP
+****
+
+.. code-block:: bash
+
+ apt-get install slapd ldap-utils ldapscripts
+
+ https://kifarunix.com/install-and-configure-openldap-server-on-debian-9-stretch/#:~:text=The%20installer%20will%20prompt%20you,proceed%20with%20installation%20and%20configuration.
+ 
+
+
+Serveur de fichier : SSH + FTP
+******************************

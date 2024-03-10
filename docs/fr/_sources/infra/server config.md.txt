@@ -1,0 +1,94 @@
+# Server config
+
+{bdg-primary-line}`2018`
+
+## Linux installation
+
+File system mount:
+
+ * `/` : ro,suid,dev,exec,auto,nouser,async
+ * `/home` : rw,suid,dev,noexec,auto,nouser,async
+ * `/tmp` : rw,suid,dev, noexec,auto,nouser,async
+ * `/var` : rw,suid,dev,noexec,auto,nouser,async
+
+Be careful for the root directory, a read-only mount (ro) makes it impossible to modify the files. 
+This may be intended in production, note that updates will not be possible. 
+To modify the assembly, it is necessary to modify the `fstab` file in rescue mode.
+
+
+## Root access management
+
+* Installing sudo
+
+```bash
+su
+apt install sudo
+```
+* Sudo configuration, edit the `/etc/sudoers` file. 
+For example 'user' can have access to all root rights on the server add the following line:
+
+```vim 
+user      ALL=(ALL) ALL
+```
+
+## Authentication with a public/private key
+
+It is recommended to have a unique public/private key for each machine and each user. 
+The private and public key is located in the `~/.ssh/` directory. 
+Sine OpenSSH version 6.5, it is necessary to use the `ed25519` algorithm.
+
+Generating `ed25519` Key:
+
+```bash
+ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"
+```
+
+Copy public key to file `~/.ssh/authorized_keys`
+
+Add a new machine to your ~/.ssh/config file to enable automatic authentication.
+```vim
+Host newyork
+    HostName 127.0.0.1
+    Port 2222
+    User jdoe
+    IdentityFile ~/.ssh/id_ed25519
+    RequestTTY yes
+    RemoteCommand tmux -u attach || tmux -u new
+```
+
+This configuration enables SSH connection multiplexing, allowing multiple sessions to the same host to share a single network connection, which speeds up subsequent connections and reduces repeated authentication prompts.
+```vim
+Host dev-server*
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%r@%h:%p
+    ControlPersist 10m
+```
+
+## Configuring `sshd`
+
+Edit the `/etc/ssh/sshd_config` file to configure sshd.
+
+* Prohibit password authentication
+
+```vim
+# To disable tunneled clear text passwords both PasswordAuthentication and
+# ChallengeResponseAuthentication must be set to "no".
+PasswordAuthentication no
+```
+
+* Prohibit root user authentication:
+
+```vim
+PermitRootLogin no
+```
+
+* Disable Empty Passwords
+```vim
+PermitEmptyPasswords no
+```
+
+## fail2ban
+
+```bash
+apt install fail2ban
+```

@@ -1,0 +1,400 @@
+# n = 4, count = 112
+<p align="center">
+
+```{image} n4_f2_0.png
+:width: 9.0%
+```
+```{image} n4_f2_1.png
+:width: 9.0%
+```
+```{image} n4_f2_10.png
+:width: 9.0%
+```
+```{image} n4_f2_100.png
+:width: 9.0%
+```
+```{image} n4_f2_101.png
+:width: 9.0%
+```
+```{image} n4_f2_102.png
+:width: 9.0%
+```
+```{image} n4_f2_103.png
+:width: 9.0%
+```
+```{image} n4_f2_104.png
+:width: 9.0%
+```
+```{image} n4_f2_105.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_106.png
+:width: 9.0%
+```
+
+```{image} n4_f2_107.png
+:width: 9.0%
+```
+```{image} n4_f2_108.png
+:width: 9.0%
+```
+```{image} n4_f2_109.png
+:width: 9.0%
+```
+```{image} n4_f2_11.png
+:width: 9.0%
+```
+```{image} n4_f2_110.png
+:width: 9.0%
+```
+```{image} n4_f2_111.png
+:width: 9.0%
+```
+```{image} n4_f2_12.png
+:width: 9.0%
+```
+```{image} n4_f2_13.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_14.png
+:width: 9.0%
+```
+```{image} n4_f2_15.png
+:width: 9.0%
+```
+
+```{image} n4_f2_16.png
+:width: 9.0%
+```
+```{image} n4_f2_17.png
+:width: 9.0%
+```
+```{image} n4_f2_18.png
+:width: 9.0%
+```
+```{image} n4_f2_19.png
+:width: 9.0%
+```
+```{image} n4_f2_2.png
+:width: 9.0%
+```
+```{image} n4_f2_20.png
+:width: 9.0%
+```
+```{image} n4_f2_21.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_22.png
+:width: 9.0%
+```
+```{image} n4_f2_23.png
+:width: 9.0%
+```
+```{image} n4_f2_24.png
+:width: 9.0%
+```
+
+```{image} n4_f2_25.png
+:width: 9.0%
+```
+```{image} n4_f2_26.png
+:width: 9.0%
+```
+```{image} n4_f2_27.png
+:width: 9.0%
+```
+```{image} n4_f2_28.png
+:width: 9.0%
+```
+```{image} n4_f2_29.png
+:width: 9.0%
+```
+```{image} n4_f2_3.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_30.png
+:width: 9.0%
+```
+```{image} n4_f2_31.png
+:width: 9.0%
+```
+```{image} n4_f2_32.png
+:width: 9.0%
+```
+```{image} n4_f2_33.png
+:width: 9.0%
+```
+
+```{image} n4_f2_34.png
+:width: 9.0%
+```
+```{image} n4_f2_35.png
+:width: 9.0%
+```
+```{image} n4_f2_36.png
+:width: 9.0%
+```
+```{image} n4_f2_37.png
+:width: 9.0%
+```
+```{image} n4_f2_38.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_39.png
+:width: 9.0%
+```
+```{image} n4_f2_4.png
+:width: 9.0%
+```
+```{image} n4_f2_40.png
+:width: 9.0%
+```
+```{image} n4_f2_41.png
+:width: 9.0%
+```
+```{image} n4_f2_42.png
+:width: 9.0%
+```
+
+```{image} n4_f2_43.png
+:width: 9.0%
+```
+```{image} n4_f2_44.png
+:width: 9.0%
+```
+```{image} n4_f2_45.png
+:width: 9.0%
+```
+```{image} n4_f2_46.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_47.png
+:width: 9.0%
+```
+```{image} n4_f2_48.png
+:width: 9.0%
+```
+```{image} n4_f2_49.png
+:width: 9.0%
+```
+```{image} n4_f2_5.png
+:width: 9.0%
+```
+```{image} n4_f2_50.png
+:width: 9.0%
+```
+```{image} n4_f2_51.png
+:width: 9.0%
+```
+
+```{image} n4_f2_52.png
+:width: 9.0%
+```
+```{image} n4_f2_53.png
+:width: 9.0%
+```
+```{image} n4_f2_54.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_55.png
+:width: 9.0%
+```
+```{image} n4_f2_56.png
+:width: 9.0%
+```
+```{image} n4_f2_57.png
+:width: 9.0%
+```
+```{image} n4_f2_58.png
+:width: 9.0%
+```
+```{image} n4_f2_59.png
+:width: 9.0%
+```
+```{image} n4_f2_6.png
+:width: 9.0%
+```
+```{image} n4_f2_60.png
+:width: 9.0%
+```
+
+```{image} n4_f2_61.png
+:width: 9.0%
+```
+```{image} n4_f2_62.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_63.png
+:width: 9.0%
+```
+```{image} n4_f2_64.png
+:width: 9.0%
+```
+```{image} n4_f2_65.png
+:width: 9.0%
+```
+```{image} n4_f2_66.png
+:width: 9.0%
+```
+```{image} n4_f2_67.png
+:width: 9.0%
+```
+```{image} n4_f2_68.png
+:width: 9.0%
+```
+```{image} n4_f2_69.png
+:width: 9.0%
+```
+```{image} n4_f2_7.png
+:width: 9.0%
+```
+
+```{image} n4_f2_70.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_71.png
+:width: 9.0%
+```
+```{image} n4_f2_72.png
+:width: 9.0%
+```
+```{image} n4_f2_73.png
+:width: 9.0%
+```
+```{image} n4_f2_74.png
+:width: 9.0%
+```
+```{image} n4_f2_75.png
+:width: 9.0%
+```
+```{image} n4_f2_76.png
+:width: 9.0%
+```
+```{image} n4_f2_77.png
+:width: 9.0%
+```
+```{image} n4_f2_78.png
+:width: 9.0%
+```
+```{image} n4_f2_79.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_8.png
+:width: 9.0%
+```
+```{image} n4_f2_80.png
+:width: 9.0%
+```
+```{image} n4_f2_81.png
+:width: 9.0%
+```
+```{image} n4_f2_82.png
+:width: 9.0%
+```
+```{image} n4_f2_83.png
+:width: 9.0%
+```
+```{image} n4_f2_84.png
+:width: 9.0%
+```
+```{image} n4_f2_85.png
+:width: 9.0%
+```
+```{image} n4_f2_86.png
+:width: 9.0%
+```
+```{image} n4_f2_87.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_88.png
+:width: 9.0%
+```
+
+```{image} n4_f2_89.png
+:width: 9.0%
+```
+```{image} n4_f2_9.png
+:width: 9.0%
+```
+```{image} n4_f2_90.png
+:width: 9.0%
+```
+```{image} n4_f2_91.png
+:width: 9.0%
+```
+```{image} n4_f2_92.png
+:width: 9.0%
+```
+```{image} n4_f2_93.png
+:width: 9.0%
+```
+```{image} n4_f2_94.png
+:width: 9.0%
+```
+```{image} n4_f2_95.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n4_f2_96.png
+:width: 9.0%
+```
+```{image} n4_f2_97.png
+:width: 9.0%
+```
+
+```{image} n4_f2_98.png
+:width: 9.0%
+```
+```{image} n4_f2_99.png
+:width: 9.0%
+```
+
+</p>
+

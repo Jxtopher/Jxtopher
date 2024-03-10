@@ -1,0 +1,167 @@
+# nginx
+
+{bdg-primary-line}`2018`
+
+## Installation
+
+```bash
+apt install nginx
+```
+
+Organisation of directory:
+ - configuration files: `/etc/nginx/` 
+ - Logs file: `/var/log/nginx`
+ - site web: `/var/www/`
+
+The directory corresponding to a site will be named by domain name.
+Example the website file `a.example.com` is located in the `/var/www/a.example.com` directory with a configuration file of the same name.
+If the site does not have a domain name the directories will be in the name of the IP address.
+
+The default website is accessible at `http://127.0.0.1`.
+
+
+## Certificate via Let's Encrypt
+
+### Install `certbot`
+
+Add in the file `/etc/apt/sources.list`
+
+```vim
+# For debian 8
+deb http://ftp.debian.org/debian jessie-backports main
+```
+Then install cerbot :
+
+```bash
+sudo apt update
+sudo apt install certbot -t jessie-backports
+```
+
+Hide Nginx version number in headers and errors pages
+
+```bash
+server_tokens off;
+```
+ 
+### Creating a Let’s Encrypt certificate
+
+
+```bash
+certbot certonly -d x.exemple.com
+```
+
+The `certonly` argument only allows you to generate a certificate without installing it, we will do that later.
+The other argument `-d` allows you to enter the domain for which the certificate will be generated.
+The list of all arguments is available with the `man cerbot` command.
+
+Always use the `standalone` way, you must first stop all services associated with port 80 and 433 such as Nginx or Apache.
+
+### Automatic renewal
+
+To achieve automatic renewal of certificates.
+Add the line below to the '/etc/crontab' file and restart the `cron` service.
+
+```bash
+@daily service nginx stop && certbot renew --quiet && service nginx start
+```
+
+### Configuring a virtual host
+
+
+```bash
+sudo openssl dhparam -out /etc/nginx/dhparam.pem 4096
+```
+
+Add the file `/etc/nginx/snippets/ssl-params.conf` with the following elements common to all virtual hosts.
+
+```vim
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers on;
+ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+ssl_ecdh_curve secp384r1;
+ssl_session_cache shared:SSL:10m;
+ssl_session_tickets off;
+ssl_stapling on;
+ssl_stapling_verify on;
+resolver 8.8.8.8 8.8.4.4 valid=300s;
+resolver_timeout 5s;
+# Disable preloading HSTS for now.  You can use the commented out header line that includes
+# the "preload" directive if you understand the implications.
+#add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+
+# To avoid so-called “man in the middle” attacks
+ssl_dhparam /etc/ssl/certs/dhparam.pem;
+```
+
+ 
+Add the configuration below to the new file `/etc/nginx/sites-available/x.example.com`.
+A symbolic link of this is created in the sites-enabled folder to activate the site.
+ 
+```bash
+server {
+        listen 80;
+        listen [::]:80;
+
+        server_name x.exemple.com;
+        return 302 https://$server_name$request_uri;
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+
+        server_name x.exemple.com;
+        root /var/www/x.exemple.com;
+        index index.html;
+
+        ssl_certificate /etc/letsencrypt/live/x.exemple.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/x.exemple.com/privkey.pem;
+        
+        include snippets/ssl-params.conf;
+
+
+        error_page 404 /40X/;
+        error_page 403 /40X/;
+
+        location /40X/ {
+                return 0;
+        }
+}
+```
+
+## GoAccess web log analyzer 
+
+* Compilation and installation
+
+```bash
+apt install -y gcc autoconf gettext autopoint build-essential libssl-dev libmaxminddb-dev libncursesw5-dev
+git clone https://github.com/allinurl/goaccess.git
+cd goaccess
+autoreconf -fiv
+./configure --enable-utf8 --enable-geoip=mmdb --with-openssl
+make
+make install
+```
+
+* Get logs from docker with nginx. Edit file `./goaccess-nginx.conf` and add
+
+```bash
+time-format %H:%M:%S
+date-format %d/%b/%Y
+log-format %v:%^ %h %^[%d:%t %^] "%r" %s %b "%R" "%u"
+
+port 443
+real-time-html true
+ssl-cert /etc/ssl/certs/certificate.cer
+ssl-key /etc/ssl/certs/key.key
+ws-url wss://example.com
+```
+
+* Get logs (via a container) and launch GoAccess 
+
+```
+docker logs -f prod-nginx  2>/dev/null | goaccess -p ./goaccess-nginx.conf -o html - > /mnt/data-website/prod-proxy/data/html/goaccess/index.html
+```

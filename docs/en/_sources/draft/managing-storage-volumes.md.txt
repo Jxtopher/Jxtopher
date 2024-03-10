@@ -1,0 +1,338 @@
+# Managing storage volumes
+
+
+## Disk partitioning
+
+
+Partition utility `gparted` (Gui) and `fdisk` (Cli)
+
+```
+$ fdisk -l
+Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: Samsung SSD 870
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 3A3750B4-A1B5-11ED-A568-F89E9481ADCF
+
+Device     Start        End    Sectors   Size Type
+/dev/sda1   2048 1953523711 1953521664 931.5G Linux filesystem
+```
+
+Exemple de création d’une partition primaire :
+
+```
+Commande (m pour l'aide): n
+Action de commande
+l   logique (5 ou plus)
+p   partition primaire (1-4)
+p
+Numéro de partition (1-4): 4
+Premier cylindre (6749-14946, par défaut 6749):
+Utilisation de la valeur par défaut 6749
+Dernier cylindre ou +taille or +tailleM ou +tailleK (6749-8017, par défaut 8017)  : +5M
+
+soit : 'n' pour créer une nouvelle partition, ’p’ pour partition primaire, ’4’ sera notre numéro de partition primaire puis on choisi le premier cylindre et la taille de la nouvelle partition (5Mo).
+```
+
+## Créer un système de fichiers
+
+Nous avons créé une ou plusieurs partitions avec fdisk. maintenant pour pouvoir les utiliser, il faut créer les systèmes de fichiers correspondants.
+
+
+```bash
+mkfs.bfs
+mkfs.cramfs
+mkfs.ext2
+mkfs.ext3
+mkfs.minix
+mkfs.msdos -> mkdosfs
+mkfs.reiserfs
+mkfs.vfat -> mkdosfs
+```
+
+Utiliser mkfs.ext3 pour formater la partition en ext3 :
+
+```bash
+mkfs.ext3 /dev/sda5
+```
+
+Pour vérifier l’intégrité de la partition en même temps que le formatage avec l’option -c
+
+```bash
+mkfs.ext3 -c /dev/sda5
+```
+
+### Crée des volumes zfs
+
+```bash
+apt -y install linux-headers-$(uname -r)
+```
+
+
+```bash
+ln -s /bin/rm /usr/bin/rm
+```
+
+```bash
+apt -y install zfs-dkms
+```
+
+## Vérifier un système de fichiers
+
+Pour vérifier l’intégrité d’un système de fichiers, utilise les commandes fsck.
+
+```bash
+fsck
+fsck.cramfs
+fsck.ext2
+fsck.ext3
+fsck.minix
+fsck.msdos -> dosfsck
+fsck.nfs
+fsck.reiserfs
+fsck.vfat -> dosfsck
+```
+
+Par exemple, pour vérifier le système de fichiers de type ext3 sur la partition sda5
+
+```bash
+fsck.ext3 /dev/sda5
+```
+
+Si fsck vous informe de faire un fsck manuel, exécutez avec l’option -y
+
+```bash
+fsck.ext3 -y /dev/sda5
+```
+
+## Monter le système de fichier
+
+
+Monter le volume sda5 dans le répertoire **/mnt/data**
+
+```bash
+mount -t ext4 /dev/sda5 /mnt/data
+```
+
+Monter un répertoire dans un autre répertoire. Monter le répertoire **/media/sda5/moves** dans le répertoire **/home/user/videos**
+
+```bash
+mount -o bind /media/sda5/moves /home/user/videos
+```
+
+Editer le fichier ** ** pour un montage automatique au démarrage de la machine physique.
+
+```bash
+/dev/sda5   /mnt/data           ext4 defaults       0 0
+/proc       /chroot/mysql/proc  none defaults,bind  0 0
+```
+
+
+## Réparer un système de fichiers
+
+Si régulièrement fsck vous informe qu’il y a des erreurs sur votre système de fichiers, c’est qu’il y a peut-être des blocs défectueux.
+
+Commencer par vérifier la partition avec la commande badblocks dans un mode non destructif, exemple avec la partition sda5
+
+```bash
+badblocks -n -s -v /dev/sda5
+Vérification des blocs défectueux dans un mode non destructif de lecture-écriture
+Du bloc 0 au bloc 19535008
+Vérification des blocs défectueux (test non destructif de lecture-écriture)
+Test en cours avec un motif aléatoire :         1077632/       19535007
+```bash
+
+ Ce test peut être plus ou moins long selon la taille de la partition. Si des blocs défectueux sont détectés par badblocks, il faut maintenant les marquer comme étant inutilisable, exemple pour un système de fichier de type ext2/ext3 avec la partition sda5
+
+```bash
+e2fsck -c /dev/sda5
+```
+
+**e2fsck** va exécuter **badblocks**, marquer les blocs défectueux et les ajouter à l’inode des blocs défectueux. Si vous souhaitez arrêter badblocks ou e2fsck, il faut le faire proprement. Il faut d'envoyer le signal TERM au processus, exemple :
+
+```bash
+kill -s TERM 'pidof badblocks'
+```
+
+## Test de disques durs
+
+
+Pour tester la rapidité de lecture de votre disque dur
+
+```bash
+hdparm  -t /dev/sda
+
+/dev/sda:
+Timing buffered disk reads:  164 MB in  3.03 seconds =  54.15 MB/sec
+```
+
+Pour tester la rapidité de lecture du cache de votre disque dur
+
+```bash
+hdparm  -T /dev/sda
+
+/dev/sda:
+Timing cached reads:   980 MB in  2.00 seconds = 489.46 MB/sec
+```
+
+## Informations sur le disque dur
+
+Connaître sa géométrie (nombre de cylindres, secteurs ...)
+
+```bash
+hdparm  -g /dev/sda
+```
+
+Les informations sur l’identité du disque dur
+
+```bash
+hdparm  -i /dev/sda
+```
+
+## Technologie S.M.A.R.T.
+
+
+La plupart des constructeurs de disques durs intègrent sur leurs produits la technologie S.M.A.R.T. (Self Monitoring and Reporting Technology). Cette technologie permet de surveiller les caractéristiques techniques du disque dur (température, erreurs, cycle de mise sous tension...) et ce, afin de prévenir d’une défaillance du matériel. Pour consulter ces paramètres sous Linux, il faut installer smartmontools, un paquet doit probablement exister pour votre distribution. Pour activer la technologie smart sur votre disque dur.
+
+```bash
+smartctl -s on /dev/sda
+
+=== START OF ENABLE/DISABLE COMMANDS SECTION ===
+SMART Enabled.
+ ```
+
+Le service smartd, installé par smartmontools, est capable d’envoyer des mails en cas de problème sur votre disque, voir le fichier de configuration /etc/smartd.conf. Pour visualiser les informations smart du disque dur
+
+```
+smartctl --all /dev/sda
+
+=== START OF INFORMATION SECTION ===
+Model Family:     Maxtor DiamondMax 10 family (ATA/133 and SATA/150)
+Device Model:     Maxtor 6B120P0
+Serial Number:    B40KPVQH
+Firmware Version: BAH41B70
+User Capacity:    122 942 324 736 bytes
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   7
+ATA Standard is:  ATA/ATAPI-7 T13 1532D revision 0
+Local Time is:    Sun Dec  7 00:20:16 2008 CET
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: PASSED
+...
+SMART Attributes Data Structure revision number: 16
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+3 Spin_Up_Time            0x0027   202   202   063    Pre-fail  Always       -       14443
+4 Start_Stop_Count        0x0032   253   253   000    Old_age   Always       -       68
+5 Reallocated_Sector_Ct   0x0033   253   253   063    Pre-fail  Always       -       0
+6 Read_Channel_Margin     0x0001   253   253   100    Pre-fail  Offline      -       0
+7 Seek_Error_Rate         0x000a   253   252   000    Old_age   Always       -       0
+8 Seek_Time_Performance   0x0027   250   239   187    Pre-fail  Always       -       62450
+9 Power_On_Minutes        0x0032   250   250   000    Old_age   Always       -       1043h+27m
+10 Spin_Retry_Count        0x002b   253   252   157    Pre-fail  Always       -       0
+11 Calibration_Retry_Count 0x002b   253   252   223    Pre-fail  Always       -       0
+12 Power_Cycle_Count       0x0032   247   247   000    Old_age   Always       -       2726
+192 Power-Off_Retract_Count 0x0032   253   253   000    Old_age   Always       -       0
+193 Load_Cycle_Count        0x0032   253   253   000    Old_age   Always       -       0
+194 Temperature_Celsius     0x0032   034   253   000    Old_age   Always       -       32
+```
+
+Il existe une interface graphique à smartmontools : GSmartControl. Sur debian/ubuntu, il est également possible d’installer smart-notifier, il s’agit d’un service tournant en tâche de fond affichant une fenêtre vous informant d’un problème matériel sur votre disque dur
+
+```bash
+sudo apt install smart-notifier
+```
+
+## Les disques virtuels Linux
+
+
+### Création d'un disque virtuel
+
+
+Créatioin d'un disque virtuel de 2Go
+
+```bash
+dd if=/dev/zero of=/data/vdisque1 bs=1M count=2000
+```
+
+Formatage en ext4 du disque virtuel
+
+```bash
+mkfs.ext4 /data/vdisque1
+```
+
+Le montage du disque virtuel
+
+```bash
+mount -o loop /data/vdisque1 /mnt/vdisque1
+```
+
+### Redimensionnement d'un disque virtuel
+
+
+```bash
+losetup /dev/loop0 vdisque1
+```
+
+```bash
+dd if=/dev/zero bs=1MiB of=vdisque1 conv=notrunc oflag=append count=yyy
+```
+
+avec yyy le nombre de mega-octets
+
+```bash
+losetup -c /dev/loop0
+```
+
+```bash
+resize2fs /dev/loop0 512m
+```
+
+avec 512 en nouvelle taille
+
+## Chiffrage d'un système de fichiers
+
+
+Loop-aes-utils est remplacer par cryptsetup.
+
+Intallation de packages
+
+```bash
+sudo apt install cryptsetup
+```
+
+Création du système fichier, un volume virtuel, avec la commande dd
+
+```bash
+dd if=/dev/urandom of=crypto.raw bs=1k count=100000
+```
+
+Montage et cryptage avec ase-256 du système de fichier
+
+```bash
+sudo cryptsetup luksFormat crypto.raw
+losetup -e aes-256 /dev/loop0 crypto.raw
+```
+
+Formatage du système de fichier
+
+```bash
+mkfs.ext4 /dev/loop0
+```
+
+Démontage de la partion
+
+```bash
+losetup -d /dev/loop0
+```
+
+Montage du système de fichier cypter
+
+```bash
+mount -t ext4 crypto.raw /mnt -oencryption=aes-256
+```

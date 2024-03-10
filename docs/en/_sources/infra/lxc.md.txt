@@ -1,0 +1,134 @@
+# Containers with LXC
+
+{bdg-primary-line}`2018`
+
+## Installation
+
+```bash
+sudo apt install lxc
+```
+
+```bash
+sudo apt install bridge-utils debootstrap #libvirt-daemon-system libvirt-clients
+```
+
+- Check the kernel configuration:
+
+```bash
+lxc-checkconfig
+```
+
+## Creating a container
+
+The `/vdisk/vmXX/` directory contains the `lxc.conf` file defining the entire container configuration, the `rootfs` directory with all the virtual machine data and the `run.sh` file. allowing the machine to start.
+
+Recovering data from the virtual machine. In our case the distribution is debian stretch version with a 64-bit architecture.
+
+```sh
+debootstrap --include=lxc --arch=amd64 buster rootfs
+```
+
+Creating `/vdisk/vmXX/lxc.conf` configuration without network interface
+
+```sh
+# lxc version 2
+lxc.utsname = vm1
+lxc.arch = x86_64
+
+# filesystem
+lxc.rootfs.path = /vdisk/vmXX/rootfs
+lxc.mount.entry=proc /proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=tmpfs /dev/shm tmpfs  defaults 0 0
+lxc.pts=1024
+
+# Environment variable to pass into the conteneur for user root
+lxc.environment= PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+lxc.environment= TERM=xterm
+```
+
+```sh
+# lxc version 2
+name = vm1
+architecture = x86_64
+
+# filesystem
+lxc.rootfs.path = /mnt/vdisk/rootfs
+lxc.mount.entry=proc /proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=tmpfs /dev/shm tmpfs  defaults 0 0
+lxc.tty.max=1024
+
+# Environment variable to pass into the conteneur for user root
+lxc.environment= PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+lxc.environment= TERM=xterm
+```
+
+Add the virtual machine to LXC (`/var/lib/lxc`)
+
+```bash
+lxc-create -n vm1 -f /vdisk/vmXX/lxc.conf  -t none
+```
+
+Open a bash in for a virtual machine
+
+```bash
+lxc-attach -n vm1 -f /mnt/vdisk/lxc.conf
+```
+
+Run a task in the container
+
+```bash
+lxc-execute -n vm1 -f /vdisk/vmXX/lxc.conf -- /bin/ls
+```
+
+
+## Container network configuration
+
+* With a bridge
+
+Dans `/vdisk/vmXX/lxc.conf`
+
+```sh
+ # networking
+ lxc.network.type = veth
+ lxc.network.flags = up
+ lxc.network.link = br0
+ lxc.network.hwaddr = C0:00:00:F0:00:01
+ lxc.network.ipv4 = 192.168.42.61/24
+ lxc.network.ipv4.gateway = 192.168.42.129
+ #lxc.network.ipv6 =
+```
+
+In `/etc/network/interfaces`, add the bridge `br0` to link to the physical interface `enp0s3` with a static address.
+
+```sh
+auto br0
+iface br0 inet static
+  bridge_ports enp0s3
+  bridge_fd 0
+  bridge_maxwait 0
+  address 192.168.42.60
+  netmask 255.255.255.0
+  gateway 192.168.42.129
+```
+
+* Forwarding activation 
+
+```bash
+ echo "1" > /proc/sys/net/ipv4/ip_forward
+```
+
+## Installing `Apache2` in the container
+
+Open a container terminal, then install apache2.
+
+```bash
+lxc-attach -n vm1 -f /mnt/vdisk/lxc.conf
+apt install apache2
+```
+
+At the host machine level, we can start the container and stop it.
+
+```bash
+lxc-start -n vm1 -f /mnt/vdisk/lxc.conf -d
+lxc-stop -n vm1
+```

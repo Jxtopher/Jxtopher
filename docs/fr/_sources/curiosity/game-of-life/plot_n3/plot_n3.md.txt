@@ -1,0 +1,174 @@
+# n = 3, $uniq_{count}$ = 51 
+
+La configuration initiale est un carré de côté $3$, ce qui implique $2^{3*3} = 512$ combinaisons possibles. 
+Cependant, pour rechercher des dynamiques uniques, nous devons cassé les symétries et translation.
+
+
+Ci-dessous la dynamique de l'automate avec une configuration unique.
+
+## Population mourante (33)
+
+```{image} 00000.avi.gif
+:width: 15.0%
+```
+```{image} 00001.avi.gif
+:width: 15.0%
+```
+```{image} 00010.avi.gif
+:width: 15.0%
+```
+```{image} 00012.avi.gif
+:width: 15.0%
+```
+```{image} 00013.avi.gif
+:width: 15.0%
+```
+```{image} 00014.avi.gif
+:width: 15.0%
+```
+```{image} 00068.avi.gif
+:width: 15.0%
+```
+```{image} 00069.avi.gif
+:width: 15.0%
+```
+```{image} 00070.avi.gif
+:width: 15.0%
+```
+```{image} 00071.avi.gif
+:width: 15.0%
+```
+```{image} 00078.avi.gif
+:width: 15.0%
+```
+```{image} 00084.avi.gif
+:width: 15.0%
+```
+```{image} 00085.avi.gif
+:width: 15.0%
+```
+```{image} 00086.avi.gif
+:width: 15.0%
+```
+```{image} 00133.avi.gif
+:width: 15.0%
+```
+```{image} 00134.avi.gif
+:width: 15.0%
+```
+```{image} 00140.avi.gif
+:width: 15.0%
+```
+```{image} 00141.avi.gif
+:width: 15.0%
+```
+```{image} 00142.avi.gif
+:width: 15.0%
+```
+```{image} 00143.avi.gif
+:width: 15.0%
+```
+```{image} 00148.avi.gif
+:width: 15.0%
+```
+```{image} 00159.avi.gif
+:width: 15.0%
+```
+```{image} 00196.avi.gif
+:width: 15.0%
+```
+```{image} 00197.avi.gif
+:width: 15.0%
+```
+```{image} 00198.avi.gif
+:width: 15.0%
+```
+```{image} 00199.avi.gif
+:width: 15.0%
+```
+```{image} 00212.avi.gif
+:width: 15.0%
+```
+```{image} 00213.avi.gif
+:width: 15.0%
+```
+```{image} 00214.avi.gif
+:width: 15.0%
+```
+```{image} 00215.avi.gif
+:width: 15.0%
+```
+
+```{image} 00221.avi.gif
+:width: 15.0%
+```
+```{image} 00222.avi.gif
+:width: 15.0%
+```
+```{image} 00223.avi.gif
+:width: 15.0%
+```
+
+## État stable (10)
+```{image} 00011.avi.gif
+:width: 15.0%
+```
+```{image} 00015.avi.gif
+:width: 15.0%
+```
+```{image} 00079.avi.gif
+:width: 15.0%
+```
+```{image} 00094.avi.gif
+:width: 15.0%
+```
+```{image} 00095.avi.gif
+:width: 15.0%
+```
+```{image} 00150.avi.gif
+:width: 15.0%
+```
+```{image} 00156.avi.gif
+:width: 15.0%
+```
+```{image} 00204.avi.gif
+:width: 15.0%
+```
+```{image} 00206.avi.gif
+:width: 15.0%
+```
+```{image} 00220.avi.gif
+:width: 15.0%
+```
+
+## Boucle (3)
+```{image} 00135.avi.gif
+:width: 15.0%
+```
+```{image} 00149.avi.gif
+:width: 15.0%
+```
+```{image} 00151.avi.gif
+:width: 15.0%
+```
+
+
+## Objet en déplacement (2)
+```{image} 00157.avi.gif
+:width: 15.0%
+```
+```{image} 00205.avi.gif
+:width: 15.0%
+```
+
+## Population croissante (3)
+
+```{image} 00087.avi.gif
+:width: 15.0%
+```
+```{image} 00158.avi.gif
+:width: 15.0%
+```
+```{image} 00207.avi.gif
+:width: 15.0%
+```

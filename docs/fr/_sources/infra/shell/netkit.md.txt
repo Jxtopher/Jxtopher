@@ -1,0 +1,44 @@
+# Lab of network - netkit
+
+{bdg-primary-line}`2011`
+
+
+## Installing `netkit`
+
+```bash
+wget http://wiki.netkit.org/download/netkit/netkit-2.7.tar.bz2
+wget http://wiki.netkit.org/download/netkit-filesystem/netkit-filesystem-i386-F5.1.tar.bz2
+wget http://wiki.netkit.org/download/netkit-kernel/netkit-kernel-i386-K2.8.tar.bz2
+```
+
+Unpack all the archives in the same folder named `netkit`. Edit the `~/.bashrc` file:
+
+```bash
+export NETKIT_HOME=/home/apps/local/netkit
+export MANPATH=:$NETKIT_HOME/man
+export PATH=$NETKIT_HOME/bin:$PATH
+```
+## Useful commands
+
+Netkit provides two groups of commands.
+
+* `vcommands`, prefixed with `v`
+* `lcommands`, prefixed with `l`
+
+The `vcommands`` used to manipulate isolated VMs:
+
+* `vstart`: start from a virtual machine
+* `vlist`: list virtual machines to start
+* `vconfig`: assign an interface on the fly to a virtual machine. (vconfig –eth0=dc1 pc1 - assign eth0 to VM pc1, in collision domain dc1)
+* `vhalt`: shut down a virtual machine
+* `vcrash`: triggers a virtual crash
+* `vclean`: cleans processes and configurations
+
+The `lcommands` used on complex scenarios of several VMs (lab) in netkit terminology.
+
+* `lstart`: start the netkit laboratory
+* `lhalt`: stop the laboratory
+* `lcrach`: trigger a crash of all VMs
+* `lclean`: delete temporary files
+* `linfo`: information about the laboratory
+* `ltest`: verification of the proper functioning of the laboratory

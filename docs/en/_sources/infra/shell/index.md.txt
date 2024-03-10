@@ -1,0 +1,10 @@
+
+# Shell
+
+
+```{toctree}
+:titlesonly:
+:glob:
+
+*
+```

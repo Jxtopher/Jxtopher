@@ -1,0 +1,37 @@
+# Peaceable Armies of Queens
+
+{bdg-primary-line}`2021`
+{bdg-primary-line}`Problem solving`
+
+The problem of the peaceful army of queens is introduced by Robort Bosch in 1999. 
+Consider a chessboard of size n with two equal sets of queens of different colors whose queens of different colors must not be put in check. 
+For which the number of queens must be maximized.
+
+
+## All optimal solutions with symmetries
+
+| n   |   Solutions     | Complet |
+| :-: |:---------------:| :------: |
+|  2  |         1       |    [ ]   |
+|  3  |         16      |    [ ]   |
+|  4  |         112     |    [x]   |
+|  5  |         18      |    [x]   |
+|  6  |         560     |    [x]   |
+|  7  |         304     |    [x]   |
+|  8  |          ?      |    [ ]   |
+
+```{toctree}
+:titlesonly:
+
+peaceable-armies-of-queens/plot_n4/plot_n4.md
+peaceable-armies-of-queens/plot_n5/plot_n5.md
+peaceable-armies-of-queens/plot_n6/plot_n6.md
+peaceable-armies-of-queens/plot_n7/plot_n7.md
+```
+
+## Refs
+
+ - [A250000](https://oeis.org/A250000)
+ - [coexx.gms : Peacefully Coexisting Armies of Queens - tight ](https://www.gams.com/latest/gamslib_ml/libhtml/gamslib_coexx.html)
+ - [P110: Peaceably Co-existing Armies of Queens](https://www.csplib.org/Problems/prob110)
+    

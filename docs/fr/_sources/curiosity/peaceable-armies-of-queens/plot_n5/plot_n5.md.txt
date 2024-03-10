@@ -1,0 +1,64 @@
+# n = 5, count = 18
+<p align="center">
+
+```{image} n5_f4_0.png
+:width: 9.0%
+```
+```{image} n5_f4_1.png
+:width: 9.0%
+```
+```{image} n5_f4_10.png
+:width: 9.0%
+```
+```{image} n5_f4_11.png
+:width: 9.0%
+```
+```{image} n5_f4_12.png
+:width: 9.0%
+```
+```{image} n5_f4_13.png
+:width: 9.0%
+```
+```{image} n5_f4_14.png
+:width: 9.0%
+```
+```{image} n5_f4_15.png
+:width: 9.0%
+```
+```{image} n5_f4_16.png
+:width: 9.0%
+```
+
+</p>
+<p align="center">
+
+```{image} n5_f4_17.png
+:width: 9.0%
+```
+
+```{image} n5_f4_2.png
+:width: 9.0%
+```
+```{image} n5_f4_3.png
+:width: 9.0%
+```
+```{image} n5_f4_4.png
+:width: 9.0%
+```
+```{image} n5_f4_5.png
+:width: 9.0%
+```
+```{image} n5_f4_6.png
+:width: 9.0%
+```
+```{image} n5_f4_7.png
+:width: 9.0%
+```
+```{image} n5_f4_8.png
+:width: 9.0%
+```
+```{image} n5_f4_9.png
+:width: 9.0%
+```
+
+</p>

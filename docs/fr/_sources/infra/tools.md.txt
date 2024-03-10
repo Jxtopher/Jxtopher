@@ -1,0 +1,107 @@
+# Tools
+
+{bdg-primary-line}`2023`
+
+## Password generator
+<script language="JavaScript">
+    function DonneNombreHasard(Minimum, Maximum) {
+        return (Math.floor(Math.random() * (Maximum - Minimum)) + Minimum);
+    }
+
+    function DonneCaractereHasard(Nombres, Minuscules, Majuscules, Specials, SuperSpecials) {
+        var CharacterString = ""
+
+        if (Nombres == true) CharacterString += "123456789";
+        if (Minuscules == true) CharacterString += "abcdefghijkmnpqrstuvwxyz";
+        if (Majuscules == true) CharacterString += "ABCDEFGHJKLMNPQRSTUVWXYZ";
+        if (Specials == true) CharacterString += "!_@";
+        if (SuperSpecials == true) CharacterString += "`~#$%^&*()=+[{]}\\|;:'\",<.>/?-";
+
+        return CharacterString.charAt(DonneNombreHasard(0, CharacterString.length));
+    }
+
+    function ComposerMotPasse(Longueur, Nombre, Minuscule, Majuscule, Specials, SuperSpecials) {
+        var Resultat = "";
+        if (Longueur > 0) Resultat = Resultat + DonneCaractereHasard(Nombre, Minuscule, Majuscule, Specials, SuperSpecials);
+        for (var i = 1; i < Longueur; ++i) {
+            Resultat = Resultat + DonneCaractereHasard(Nombre, Minuscule, Majuscule, Specials, SuperSpecials);
+        }
+        return Resultat;
+    }
+
+    function Generer() {
+        document.FormGenerateur.password.value =
+            ComposerMotPasse
+                (
+                    document.FormGenerateur.LongMotPasse.value,
+                    document.FormGenerateur.Nombre.checked,
+                    document.FormGenerateur.Minuscule.checked,
+                    document.FormGenerateur.Majuscule.checked,
+                    document.FormGenerateur.Specials.checked,
+                    document.FormGenerateur.SuperSpecials.checked,
+                );
+    }
+</script>
+
+
+<form name="FormGenerateur">
+    <table border=0 align="center">
+        <tr>
+            <td align="right" valign="top" nowrap>Password composed of</td>
+            <td nowrap>
+                <input type="checkbox" name="Nombre" checked> Number<br>
+                <input type="checkbox" name="Minuscule" checked> Lowercase alphabet<br>
+                <input type="checkbox" name="Majuscule" checked> Uppercase alphabet<br>
+                <input type="checkbox" name="Specials" checked> Specials<br>
+                <input type="checkbox" name="SuperSpecials"> Super specials<br>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">Number of letters</td>
+            <td>
+                <input type=text name=LongMotPasse value="16" size=3>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <input type=button value="Generate" onClick="Generer()">
+            </td>
+            <td>
+                <input type=text name=password size=40>
+            </td>
+        </tr>
+    </table>
+</form>
+
+## Cryptor XOR
+<script language="Javascript">
+    function cryptor_xor() {
+        var opcode = document.formulaire.opcode.value;
+        var code = parseInt(document.formulaire.code.value, 16);
+        var motif = new RegExp('[0-9a-fA-F]+', 'g');
+        var tab;
+        var result = "";
+        tab = opcode.match(motif);
+        if (tab == null) {
+            alert("Aucun appariement n'est possible !");
+        } else {
+            for (var i = 0; i < tab.length; i++) {
+                var number = parseInt(tab[i], 16) ^ code;
+                result += "\\x" + number.toString(16).toUpperCase();
+            }
+        }
+        document.formulaire.opcode.value = result;
+        document.formulaire.nbopcode.value = tab.length;
+    }
+</script>
+<form name="formulaire" action="">
+    <textarea cols="80" rows="10" name="opcode"
+        style="width: 100%; height: 205px ">\x4c\x7c\x6b\x80\x79\x2b\x2a\x5e\x7f\x2a\x7a\x6f\x7f\x82\x2a\x80\x6b\x76\x73\x6e\x6f\x7c\x2a\x6b\x80\x6f\x6d\x2a\x76\x6f\x2a\x7a\x6b\x7d\x7d\x2a\x63\x79\x76\x6b\x73\x72\x7f\x14\x0a</textarea>
+    <p style="text-align:left;">
+        Number of opcodes <input type="text" name="nbopcode" size="4" disabled="disabled">
+        <span style="float:right;">
+            <input type="text" name="code" size="2" maxlength="2" value="A5">
+            <input type="button" value="Apply xor" onClick="cryptor_xor()">
+        </span>
+    </p>
+</form>

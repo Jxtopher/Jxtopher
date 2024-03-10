@@ -1,0 +1,132 @@
+# Debugging with GDB
+
+## Code to debug
+
+We then use in this article this program which gives the number of people having a common birthday.
+
+```{admonition} Birthday problem
+:class: dropdown
+
+```cpp
+// source: https://rosettacode.org/wiki/Birthday_problem#C++
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <vector>
+
+double equalBirthdays(int nSharers, int groupSize, int nRepetitions) {
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(0, 364);
+    std::vector<int> group(365);
+
+    int eq = 0;
+    for (int i = 0; i < nRepetitions; i++) {
+        std::fill(group.begin(), group.end(), 0);
+        for (int j = 0; j < groupSize; j++) {
+            int day = distribution(generator);
+            group[day]++;
+        }
+        if (std::any_of(group.cbegin(), group.cend(), [nSharers](int c) { return c >= nSharers; })) {
+            eq++;
+        }
+    }
+
+    return (100.0 * eq) / nRepetitions;
+}
+
+int main() {
+    int groupEst = 2;
+
+    for (int sharers = 2; sharers < 6; sharers++) {
+        // Coarse
+        int groupSize = groupEst + 1;
+        while (equalBirthdays(sharers, groupSize, 100) < 50.0) {
+            groupSize++;
+        }
+
+        // Finer
+        int inf = (int)(groupSize - (groupSize - groupEst) / 4.0f);
+        for (int gs = inf; gs < groupSize + 999; gs++) {
+            double eq = equalBirthdays(sharers, groupSize, 250);
+            if (eq > 50.0) {
+                groupSize = gs;
+                break;
+            }
+        }
+
+        // Finest
+        for (int gs = groupSize - 1; gs < groupSize + 999; gs++) {
+            double eq = equalBirthdays(sharers, gs, 50000);
+            if (eq > 50.0) {
+                groupEst = gs;
+                printf("%d independant people in a group of %d share a common birthday. (%5.1f)\n", sharers, gs, eq);
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+
+```
+
+* Compiling with the -g flag will generate debugging symbols
+
+```bash
+g++ -g3 birthday_problem.cpp -o birthday_problem
+```
+
+## Debugging step by step
+
+## Add breakpoint
+
+* Add breakpoint on the `main` function
+
+```{figure} debugging-with-gdb/breakpoint-main.png
+:alt: breakpoint on the main function 
+:class: bg-primary
+:align: center
+```
+
+* Add breakpoint on a specific line like `birthday_problem.cpp:32`
+
+```{figure} debugging-with-gdb/breakpoint-specific-line.png
+:alt: breakpoint on a specific line
+:class: bg-primary
+:align: center
+```
+
+## Run the program
+
+* Run the program using the command `run`. 
+And the debugger stops on the first breakpoint.
+
+```{figure} debugging-with-gdb/run-and-break.png
+:alt: launch the program
+:class: bg-primary
+:align: center
+```
+
+* Debuggers allow you to inspect the program's state, including variables and functions, at any point during execution. 
+You can then choose to either step through the code line by line or run (see the below example it until the next breakpoint is reached.
+
+
+```{figure} debugging-with-gdb/continue-and-break.png
+:alt: continue and break
+:class: bg-primary
+:align: center
+```
+
+* Print a variable
+
+```{figure} debugging-with-gdb/print-variable.png
+:alt: continue and break
+:class: bg-primary
+:align: center
+```
+
+## Scripting 
+
+Two sample scripts:
+* [for GDB](debugging-with-gdb/tracer-gdb.py)
+* [for LLDB](debugging-with-gdb/tracer-lldb.py)

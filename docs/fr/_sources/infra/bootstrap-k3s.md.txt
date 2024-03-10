@@ -1,0 +1,653 @@
+# Bootstrap GitOps with k3s
+
+{bdg-primary-line}`2025`
+
+## 🚀 GitOps Installation Procedure with ArgoCD on k3s
+
+Here is the complete procedure for setting up a GitOps environment on **k3s** using **ArgoCD**, with Gitea as the source of truth (GitOps repository).
+
+| Step | Main Tool |  Role |
+| :--- | :--- |  :--- |
+| **0. Preparation** | Git, SSH Key |  Ensure everything is ready on the host machine. |
+| **1. Minimal Kubernetes** | **k3s** |  Install the cluster as quickly as possible. |
+| **2. Temporary GitOps Repository (Bootstrapping)** | **Gitea (Manual)** | Prepare an operational Git server for ArgoCD **bootstrapping**. |
+| **3. GitOps Engine** | **ArgoCD (Manual)** |  Install ArgoCD and configure it to monitor the temporary Gitea repository. |
+| **4. Gitea Integration into GitOps** | **ArgoCD Application** | Place the ArgoCD manifests for Gitea into the Git repository so ArgoCD takes over full management. |
+| **5. Finalization** | Test, Validation | Verify that GitOps is working and managing Gitea. |
+| **6. MetalLB Integration into GitOps** | **ArgoCD Application** | Deploy MetalLB via GitOps to provide **LoadBalancer** services. |
+| **7. HashiCorp Vault Integration** | **Argo CD Application, Vault** | Deploy Vault via GitOps (Helm) and perform the **manual** initialization/unseal. |
+| **8. Harbor Integration into GitOps** | **Argo CD Application** | Deploy Harbor, potentially leveraging Vault for secure secrets. |
+
+## Step 0: Host Machine Preparation (5 min)
+
+This step involves installing all necessary tools on your local machine.
+
+1.  **Install Git**
+2.  **Install the Kubernetes CLI (`kubectl`):** This is essential for interacting with the cluster.
+    ```bash
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+    ```
+3.  **Install helm:**
+    ```bash
+    sudo apt-get install curl gpg apt-transport-https --yes
+    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+    echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    sudo apt-get update
+    sudo apt-get install helm
+    ```
+4.  **Install the ArgoCD CLI:**
+    ```bash
+    curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+    rm argocd-linux-amd64
+    ```
+
+
+
+## Step 1: k3s Installation
+
+We deploy the lightweight Kubernetes cluster.
+
+1.  **k3s Installation:**
+    ```bash
+    curl -sfL https://get.k3s.io | sh -
+    ```
+2.  **`kubectl` Configuration:**
+    ```bash
+    mkdir -p ~/.kube
+    sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+    sudo chown $(id -u):$(id -g) ~/.kube/config
+    ```
+3.  **Verification:**
+    ```bash
+    kubectl get nodes
+    # The status should be 'Ready'
+    ```
+
+## Step 2: Temporary GitOps Repository Deployment (Bootstrapping)
+
+We manually install **Gitea** so it can host the code managed by GitOps.
+
+1.  **Deploy Gitea with Helm (Manually):**
+
+    ```bash
+    helm repo add gitea-charts https://dl.gitea.io/charts/
+    kubectl create namespace gitea
+    helm install gitea gitea-charts/gitea -n gitea
+    ```
+
+2.  **Generate an SSH Key:** This key will allow ArgoCD to access your Gitea repository.
+    ```bash
+    ssh-keygen -t ed25519 -C "argocd-key" -f ~/.ssh/argocd_id
+    ```
+
+3.  **Access Gitea and Create the Repository:**
+
+      * **Port-forward** for Gitea (e.g., `kubectl port-forward svc/gitea-http 3000:3000 -n gitea`).
+      * Access `http://localhost:3000`, configure an admin account, and **create a new empty repository**, for example, `infrastructure`.
+      * And for Gitea SSH, **port-forward** the SSH service: `kubectl port-forward svc/gitea-ssh 2222:22 -n gitea --address 0.0.0.0`
+      * Add the **public SSH key** (`~/.ssh/argocd_id.pub`) to the **Deploy Keys** of this Gitea repository.
+
+
+## Step 3: ArgoCD Installation and Configuration
+
+### 1\. ArgoCD Installation
+
+We install the GitOps engine and connect it to the Gitea repository.
+
+1.  **Install ArgoCD into the Cluster:**
+    ```bash
+    kubectl create namespace argocd
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    ```
+2.  **Access the Web Interface and Retrieve the Admin Password:**
+    ```bash
+    kubectl port-forward svc/argocd-server 8080:443 -n argocd
+    ARGOCD_PASS=$(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d)
+    echo "Admin password: $ARGOCD_PASS"
+    ```
+      * Connect to `https://localhost:8080` with `admin` and the password.
+
+### 2\. Retrieve the Host Key from Within the Cluster
+
+You need to execute the `ssh-keyscan` command inside a temporary pod in your Kubernetes cluster to successfully resolve the FQDN and retrieve the key.
+
+1.  **Start a temporary shell** in your cluster:
+
+    ```bash
+    kubectl run -it --rm temp-keyscan --image=alpine:latest --restart=Never -- /bin/sh
+    ```
+
+2.  **Install `ssh-keyscan`** (inside the temporary pod's shell):
+
+    ```sh
+    apk add --no-cache openssh-client
+    ```
+
+3.  **Execute the keyscan command** using the FQDN and the application's actual listening port (`2222`):
+
+    ```sh
+    # Inside the temp-keyscan pod:
+    ssh-keyscan -p 2222 gitea-ssh.gitea.svc.cluster.local
+    ```
+
+    **Copy the entire output line(s)**, which should look something like this:
+
+    ```text
+    [gitea-ssh.gitea.svc.cluster.local]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQ... 
+    ```
+
+4.  **Exit the pod** by typing `exit`.
+
+
+### 3\. Update ArgoCD's Known Hosts ConfigMap
+
+Use the output you copied to update the `ConfigMap` that ArgoCD uses for known hosts.
+
+1.  **Create or Update the ConfigMap** (e.g., in `argocd-ssh-known-hosts-cm.yaml`). Ensure this file is applied to your ArgoCD namespace (e.g., `argocd`).
+
+    ```yaml
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: argocd-ssh-known-hosts-cm
+      namespace: argocd # Use your ArgoCD namespace
+    data:
+      ssh_known_hosts: |
+        # Paste the complete key line(s) from Step 1 here
+        [gitea-ssh.gitea.svc.cluster.local]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQ... 
+    ```
+
+    Apply the ConfigMap: `kubectl apply -f argocd-ssh-known-hosts-cm.yaml`
+
+2.  **Verify the main `argocd-cm`** (ArgoCD's main configuration ConfigMap) is pointing to the new known hosts map.
+
+    ```bash
+    kubectl edit cm argocd-cm -n argocd
+    ```
+
+    Ensure the `data` section includes:
+
+    ```yaml
+    data:
+      # ... other settings ...
+      ssh.knownHostsConfigMap: argocd-ssh-known-hosts-cm
+    ```
+
+3.  **Restart the ArgoCD Repo Server:** This is mandatory for the changes to take effect.
+
+    ```bash
+    kubectl rollout restart deployment argocd-repo-server -n argocd
+    ```
+
+### 4\. Register the Gitea Repository
+
+4.  **Register the Gitea Repository in ArgoCD (via CLI):**
+
+    ```bash
+    argocd login localhost:8080
+
+    # Replace <GITEA_IP>, <YOUR_USER> and <YOUR_REPO>
+    argocd repo add ssh://git@<GITEA_IP>:2222/<YOUR_USER>/<YOUR_REPO>.git \
+        --name gitea-gitops-repo \
+        --ssh-private-key-path "${HOME}/.ssh/argocd_id"
+    ```
+
+    Example:
+
+    ```bash
+    argocd repo add ssh://git@gitea-ssh.gitea.svc.cluster.local:2222/${USER}/infrastructure.git \
+    --name gitea-gitops-repo \
+    --ssh-private-key-path /home/${USER}/.ssh/id_ed25519
+    ```
+
+5.  **Create the Root Application (Auto-Bootstrapping):**
+
+    ```bash
+    # ArgoCD will monitor the 'clusters/my-cluster' folder in your Git repository
+    argocd app create argocd-root \
+      --repo ssh://git@<GITEA_IP>:2222/<YOUR_USER>/<YOUR_REPO>.git \
+      --path clusters/my-cluster \
+      --dest-server https://kubernetes.default.svc \
+      --dest-namespace argocd \
+      --sync-policy automated \
+      --auto-prune
+    ```
+
+## Step 4: Gitea Integration into GitOps
+
+We make ArgoCD manage Gitea, thereby superseding the manual installation from Step 2.
+
+1.  **Create the Application Structure:**
+    ```bash
+    mkdir -p gitops-repo/apps/gitea
+    mkdir -p gitops-repo/clusters/my-cluster
+    ```
+2.  **Create the Gitea Application (Definition File):** Create a `gitea-app.yaml` file for ArgoCD to deploy Gitea via Helm.
+    ```yaml
+    # gitops-repo/apps/gitea/gitea-app.yaml
+    apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: gitea
+      namespace: argocd 
+    spec:
+      destination:
+        namespace: gitea
+        server: https://kubernetes.default.svc
+      project: default
+      source:
+        repoURL: https://dl.gitea.io/charts/
+        targetRevision: 12.4.0
+        chart: gitea
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+    ```
+3.  **Update the Root Application Configuration:** Modify the `gitops-repo/clusters/my-cluster/kustomization.yaml` file (or create it) so the Root Application manages the Gitea application.
+    ```yaml
+    # gitops-repo/clusters/my-cluster/kustomization.yaml
+    apiVersion: kustomize.config.k8s.io/v1beta1
+    kind: Kustomization
+    resources:
+      - ../../apps/gitea/gitea-app.yaml 
+    ```
+4.  **Commit and Push:**
+    ```bash
+    git add .
+    git commit -m "Integrate Gitea into ArgoCD management"
+    git push origin main
+    ```
+
+
+## Step 5: Validation
+
+1.  **Check the Application Status in the ArgoCD interface:** The `argocd-root` application should synchronize the resources from the repository.
+2.  **Verify the Gitea Application:** The Gitea Application should automatically appear and transition to **`Healthy`** and **`Synced`** status, confirming that ArgoCD is now managing Gitea.
+
+## Step 6: MetalLB Integration into GitOps 🌐
+
+We will now use ArgoCD to deploy and configure **MetalLB**, the LoadBalancer solution for bare-metal environments.
+
+### 1\. Prepare MetalLB Manifests
+
+Add a new structure for the MetalLB application in your local `gitops-repo`.
+
+```bash
+cd gitops-repo
+mkdir -p apps/metallb
+```
+
+#### a. Create the ArgoCD Application for MetalLB (`metallb-app.yaml`)
+
+This manifest tells ArgoCD to deploy MetalLB via its Helm Chart.
+
+```yaml
+# gitops-repo/apps/metallb/metallb-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: metallb-system
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://metallb.github.io/metallb
+    targetRevision: v0.13.12 # (Use a stable version)
+    chart: metallb
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
+```
+
+#### b. Create the IP Address Configuration (`metallb-config.yaml`)
+
+Define a range of **free** IP addresses on your local network that MetalLB can assign to `LoadBalancer` services. **Replace the example below with your actual range.**
+
+```yaml
+# gitops-repo/apps/metallb/metallb-config.yaml
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  # REPLACE this range with a range of FREE IPs from your network
+  addresses:
+  - 192.168.1.240-192.168.1.250
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - first-pool
+```
+
+### 2\. Update the Root Application (Kustomization)
+
+Modify `gitops-repo/clusters/my-cluster/kustomization.yaml` to include the MetalLB manifests. Add them before Gitea.
+
+```yaml
+# gitops-repo/clusters/my-cluster/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # 1. MetalLB Application Deployment
+  - ../../apps/metallb/metallb-app.yaml 
+  # 2. MetalLB CRD Configuration
+  - ../../apps/metallb/metallb-config.yaml 
+  # 3. Gitea Application (already existing)
+  - ../../apps/gitea/gitea-app.yaml 
+```
+
+### 3\. Expose Gitea via LoadBalancer
+
+Update the Gitea application definition to use the **LoadBalancer** service type, which MetalLB will fulfill.
+
+Modify `gitops-repo/apps/gitea/gitea-app.yaml`:
+
+```yaml
+# gitops-repo/apps/gitea/gitea-app.yaml (Modifications)
+# ...
+     helm:
+        repository: https://dl.gitea.io/charts/
+        # Adding values to set the LoadBalancer service type
+        values: |
+          service:
+            type: LoadBalancer
+            http:
+              type: LoadBalancer
+            ssh:
+              type: LoadBalancer
+# ...
+```
+
+### 4\. Commit and Push
+
+```bash
+git add .
+git commit -m "Step 6: Integrate MetalLB into GitOps and configure Gitea LoadBalancers"
+git push origin main
+```
+
+### 5\. Final Verification
+
+1.  Check the ArgoCD interface to ensure the **`metallb`** application is `Synced` and `Healthy`.
+2.  Verify Gitea's service status (it should now have an external IP from your MetalLB range):
+    ```bash
+    kubectl get svc gitea-http -n gitea
+    # The EXTERNAL-IP should now show an IP from your MetalLB range (e.g., 192.168.1.240)
+    ```
+
+## 🔒 Step 7: HashiCorp Vault Integration into GitOps
+
+We will deploy **HashiCorp Vault** using its official Helm Chart and the **Vault Agent Injector**, which is essential for securely injecting secrets into Pods (such as future Gitea Runners or the Harbor application). This step leverages Argo CD to manage the deployment via GitOps.
+
+### 1\. GitOps Repository Preparation (Add Vault Chart)
+
+Navigate to your local `gitops-repo` and create the folder structure for the Vault Argo CD application.
+
+```bash
+cd gitops-repo
+mkdir -p apps/vault
+```
+
+### 2\. Create the Argo CD Application for Vault (`vault-app.yaml`)
+
+This manifest instructs Argo CD to deploy Vault via Helm. For a lab environment, we use a minimal, non-highly available configuration with built-in file storage for simplicity.
+
+> **⚠️ IMPORTANT NOTE:** This configuration is for a **lab/development environment** and is **NOT secure** or highly available for production use. For production, you must configure a resilient storage backend (e.g., Consul, PostgreSQL, or Cloud storage).
+
+```yaml
+# gitops-repo/apps/vault/vault-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: vault
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    targetRevision: v0.28.0 # Use a recent stable version
+    chart: vault
+    helm:
+      # Configurations for the k3s/lab environment
+      values: |
+        # Vault Server Configuration
+        server:
+          # Use File storage for simple persistence (requires a functional StorageClass, which k3s has by default)
+          standalone:
+            enabled: true
+            config: |
+              listener "tcp" {
+                tls_disable = 1
+                address = "[::]:8200"
+                cluster_address = "[::]:8201"
+              }
+              storage "file" {
+                path = "/vault/data"
+              }
+              disable_mlock = true
+              ui = true # Enable the user interface
+
+        # Configuration for the Vault Agent Injector
+        injector:
+          enabled: true
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+        
+        # Resource requests for the server to run on k3s
+        server:
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+```
+
+### 3\. Update the Root Application (Kustomization)
+
+Modify `gitops-repo/clusters/my-cluster/kustomization.yaml` to include the Vault application. We place it before Gitea and Harbor, as they might depend on it for secrets.
+
+```yaml
+# gitops-repo/clusters/my-cluster/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # 1. MetalLB Application Deployment
+  - metallb-app.yaml 
+  # 2. MetalLB CRD Configuration
+  - metallb-config.yaml 
+  # 3. Vault Application Deployment (NEW)
+  - vault-app.yaml
+  # 4. Gitea Application (existing)
+  - gitea-app.yaml 
+  # 5. Harbor Application Deployment (Now Step 8)
+  - harbor-app.yaml
+```
+
+### 4\. Commit and Push
+
+```bash
+git add .
+git commit -m "Step 7: Deploy HashiCorp Vault via GitOps"
+git push origin main
+```
+
+
+### 🚀 5. Post-Installation Vault Procedure (Manual)
+
+Once the `vault` application is `Healthy` and `Synced` in Argo CD, **Vault must be initialized and unsealed**. This process is **manual** and cannot be managed by Argo CD without specialized operators.
+
+1.  **Initialize Vault:**
+    Run the initialization from the Vault server Pod (this creates the keys):
+    ```bash
+    # Run initialization (only the first time)
+    kubectl exec -ti -n vault vault-0 -- vault operator init \
+        -key-shares=1 -key-threshold=1 \
+        -format=json > vault-keys.json
+
+    # KEEP this 'vault-keys.json' file in an EXTREMELY SECURE place!
+    # It contains the Unseal Key and the Root Token.
+    ```
+2.  **Unseal Vault:**
+    Vault starts in a sealed state. You must unseal it manually using the key obtained in the previous step.
+    ```bash
+    UNSEAL_KEY=$(cat vault-keys.json | jq -r ".unseal_keys_b64[0]")
+
+    # Run the unseal command
+    kubectl exec -ti -n vault vault-0 -- vault operator unseal $UNSEAL_KEY
+    ```
+3.  **Login and Configuration:**
+    Once unsealed, Vault is ready for configuration.
+      * **Port-Forwarding for UI:**
+        ```bash
+        kubectl port-forward svc/vault 8200:8200 -n vault
+        ```
+      * Access `http://localhost:8200`, log in using the **Root Token** (from `vault-keys.json`).
+      * **Configure the Kubernetes Auth Method:** This is required for the Vault Agent Injector to authenticate Pods in your cluster.
+
+
+
+## 🛠️ Step 8: Harbor Integration into GitOps 🚢
+
+This step extends your GitOps procedure to include the installation of **Harbor**, providing the necessary Container Registry for your CI/CD workflow.
+
+### Prerequisites
+
+  * **Persistent Storage:** Harbor requires Persistent Volume Claims (PVCs) for its database, Redis cache, and image storage. Ensure your default Kubernetes `StorageClass` (or your chosen one) is functioning correctly in k3s.
+  * **External IP:** **MetalLB** (installed in Step 6) must be operational to assign an external IP to the Harbor Core service.
+
+-----
+
+### 1\. Prepare the GitOps Repository (Add Harbor Chart)
+
+Navigate to your `gitops-repo` and create a folder structure for the Harbor ArgoCD application.
+
+```bash
+cd gitops-repo
+mkdir -p apps/harbor
+```
+
+### 2\. Create the ArgoCD Application for Harbor (`harbor-app.yaml`)
+
+This manifest instructs ArgoCD to deploy Harbor using its official Helm Chart. **Crucially, you must configure the exposed IP type and the admin password here.**
+
+```yaml
+# gitops-repo/apps/harbor/harbor-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: harbor # Harbor will be installed in its own namespace
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://helm.goharbor.io # Official Harbor Helm Repository
+    targetRevision: 1.18.0 # Use a recent stable version (cf. https://github.com/goharbor/harbor-helm/releases)
+    chart: harbor
+    helm:
+      # Crucial configurations for a k3s/MetalLB environment
+      values: |
+        # 1. Access Configuration (Exposition)
+        expose:
+          type: loadBalancer # Use MetalLB to assign an IP
+          tls:
+            enabled: false # Simplification for lab environment (NOT RECOMMENDED FOR PROD!)
+        
+        # 2. Admin Configuration
+        # !!! CHANGE THIS PASSWORD !!!
+        harborAdminPassword: YourSecureHarborPassword123
+        
+        # 3. Persistence (Storage)
+        # Ensures Harbor uses the default k3s StorageClass for persistent volumes
+        persistence:
+          enabled: true
+          imageChartStorage:
+            type: filesystem
+            filesystem:
+              rootDirectory: /data
+        
+        # 4. Create Namespace
+        # Ensure the Harbor namespace is created
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+```
+
+### 3\. Update the Root Application (Kustomization)
+
+Edit the `gitops-repo/clusters/my-cluster/kustomization.yaml` file to include the Harbor application definition.
+
+```yaml
+# gitops-repo/clusters/my-cluster/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # 1. MetalLB Application Deployment
+  - ../../apps/metallb/metallb-app.yaml 
+  # 2. MetalLB CRD Configuration
+  - ../../apps/metallb/metallb-config.yaml 
+  # 3. Harbor Application Deployment (NEW)
+  - ../../apps/harbor/harbor-app.yaml
+  # 4. Gitea Application (already existing)
+  - ../../apps/gitea/gitea-app.yaml 
+```
+
+### 4\. Commit and Push
+
+```bash
+git add .
+git commit -m "Step 7: Integrate Harbor Container Registry into GitOps"
+git push origin main
+```
+
+-----
+
+### 5\. Verification and Access
+
+1.  **ArgoCD Status:** Monitor the ArgoCD interface. The **`harbor`** application will appear and eventually transition to `Synced` and `Healthy` (this may take several minutes due to the number of components).
+
+2.  **Service IP:** Verify that the primary Harbor Core service has received an external IP from MetalLB.
+
+    ```bash
+    kubectl get svc harbor-harbor-core -n harbor
+    # The EXTERNAL-IP column should display an IP from your MetalLB range.
+    ```
+
+3.  **Access:** You can now access the Harbor Web UI at `http://<EXTERNAL-IP>` using the credentials: **Username:** `admin`, **Password:** `YourSecureHarborPassword123`.
+
+Your cluster now has a robust, GitOps-managed container registry ready for your CI pipeline.

@@ -1,0 +1,97 @@
+
+# Tooling for analyze forensic
+
+{bdg-primary-line}`2010`
+
+We present different tools for forensic analysis of the random-access memory.
+
+## Mass memory analysis
+
+Mass memory corresponding to all non-volatile, high-capacity media that can be written by a computer.
+
+* `fdisk` : list of partition table
+* `df` : list of mount point
+* `losetup` : mount file
+* The Coroner's Toolkit (TCT) : find file and stuff in mass memory 
+* `sleuthkit` <http://www.sleuthkit.org>.
+  * `blkcalc`: converts unassigned disk unit numbers and standard disk unit numbers.
+  * `blkcat`: displays the contents of the file system data unit in a disk image.
+  * `blkls`: displays data blocks in a file system.
+  * `blkstat`: display details of a file system data unit (block or sector).
+  * `ffind`: searches for file names that point to a specified metadata entry
+  * `fls`: lists of file names in a file system
+  * `fsstat`: displays system and statistical information on an image or other medium
+  * `hfind`: search for a hash value in a hash database.
+  * `icat`: displays a file on standard output, based on the file inode.
+  * `ifind`: Find the metadata structure that allocated a given disk drive or file name.
+  * `ils`: lists of all entered metadata, such as an inode
+  * `img_cat`: output the contents of an image file.
+  * `img_stat`: display the details of an image file.
+  * `istat`: displays information relating to a file, according to its inode
+  * `jcat`: display the contents of a block in the file system log.
+  * `jls`: lists the contents of a file system log.
+  * `mactime`: produces a timeline of MAC accesses to files whose metadata has not been destroyed
+  * `mmcat`: displays the contents of a partition on stdout.
+  * `mmls`: display the partition layout of a volume system (partition tables).
+  * `mmstat`: show details about the volume system (partition tables).
+  * `sigfind`: searches for the binary signature in a file.
+  * `sort`: sorts files deleted (and recoverable) or present in an image according to the file type: exec, text, document, archive, audio, image, video, system, ...
+  * `srch_strings`: show printable strings in files.
+  * `disk_stat`: (currently Linux only) discovers the existence of a "Host Protected Area"
+
+
+* `Autopsy`: Web interface for data analysis and recovery
+* Other recovery tools: Fatback, Foremost, Ntfsundelete
+* Other specific tools: galetta, pasco, rifiuti, ...
+* `PyFlag`: Interface for data analysis and recovery
+* Penguin Sleuth Kit: This is a live CD which contains the analysis tools
+
+## Copy of mass memory
+
+```bash
+sudo dd conv=notrunc,noerror,sync if=/dev/sdd1 of=/home/user/Desktop/file.dd
+```
+
+* notrunc warns dd not to truncate the result on an error
+* sync allows you to put `0` in instead of blocks that contain errors
+* noerror allows `dd` not to stop when it encounters an error.
+
+fsstat: displays system and statistic information on an image or other media
+
+```bash
+fsstat file.dd
+```
+Mount the image file:
+
+```bash
+losetup /dev/loop0 file.dd
+mount -r /dev/loop0 mnt     #-r : read-only
+```
+
+List files with fls. It lists the files (r/r), folders (d/d), files and folders deleted: you will see a star (*) after **d/d** or **r/r**.
+
+```bash
+fls -f ntfs /dev/loop0
+```
+Same thing as before, this time, it directly scans the file created by **dd**
+
+```bash
+fls file.dd
+```
+Display the contents of a file with **icat** on standard output depending on the file inode
+
+```bash
+icat -f ntfs file.dd 29981-128-4
+```
+
+## Ram memory Analysis with Volatility
+
+* What is the Operating System of this Dump file? (OS name) ?
+```bash
+volatility -f victim.raw imageinfo
+```
+
+* What is the PID of SearchIndexer?
+```bash
+volatility -f victim.raw --profile=Win7SP1x64 pslist
+```

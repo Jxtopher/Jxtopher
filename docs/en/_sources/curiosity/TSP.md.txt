@@ -1,0 +1,34 @@
+# Travelling salesman problem
+
+{bdg-primary-line}`2022`
+{bdg-primary-line}`Problem solving`
+
+## Definition
+
+Soit un vendeur, il doit visiter $N$ villes avec une distance de déplacement minimale.
+
+$$
+\sum_{i=1}^{n} \sum_{j \neq i, j=1}^{n}  c_{ij}x_{ij}
+$$
+
+## Instances
+
+Des instances sont disponibles `TSPLIB95` http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp/
+
+## Exemple
+
+Nous nous intéressons à l'instance eil76. Le nombre de nœuds est de 76 dans le plan euclidien.
+Dans ce cas, nous utilisons un algorithme de recherche locale stochastique:
+l'algorithme d'amélioration du premier ordre avec un opérateur d'échange de deux éléments.
+
+La figure 1 représente la progression de l'optimisation.
+
+```{figure} TSP/tsp-n76-FI-swap2.gif
+:alt: TSP-n76
+:class: bg-primary
+:align: center
+```
+
+## Refs
+
+ - [TSPLIB95](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/)

@@ -1,0 +1,85 @@
+# 🧩 Dev
+
+```{mermaid}
+%%{init: {'theme': 'dark'}}%%
+timeline
+    title Evolution of Programming Languages
+    1972 : C : Created by Dennis Ritchie (Bell Labs)
+    1985 : C++ : Introduction of Object-Oriented Programming (Bjarne Stroustrup)
+    1991 : Python : First public release (Guido van Rossum)
+    1995 : Java : "Write Once, Run Anywhere" (Sun Microsystems)
+    2015 : Rust : Focus on memory safety and performance (Mozilla)
+```
+
+::::{tab-set}
+:::{tab-item} C
+:sync: tab1
+
+1970s-1980s: Procedural
+
+```c
+void process_data(int *data, int size) {
+    for (int i = 0; i < size; i++) {
+        data[i] *= 2;
+    }
+}
+```
+
+:::
+:::{tab-item} C++
+:sync: tab2
+
+1990s-2000s: Object-Oriented
+
+```cpp
+class DataProcessor {
+    public:
+        void process(std::vector<int>& data) {
+            for (auto& val : data) val *= 2;
+        }
+}
+```
+
+:::
+
+:::{tab-item} Python
+:sync: tab2
+
+2000s-2010s: Improvement of expressiveness
+
+```py
+def process_data(data):
+    return [x * 2 for x in data]
+```
+
+:::
+
+:::{tab-item} Rust
+:sync: tab2
+
+2010s-2020s: Memory Security
+
+```rust
+fn process_data(data: &mut Vec<i32>) {
+    data.iter_mut().for_each(|x| * x *= 2);
+}
+```
+
+:::
+
+::::
+
+## Books
+
+- Knuth - 1997 - The Art of Computer Programming v1 Fundamental Algorithms
+- Knuth - 1997 - The Art of Computer Programming v2 Seminumerical Algorithms
+- Knuth - 1997 - The Art of Computer Programming v3 Sorting and Searching
+- Garey, Johnson - 1979 - computers and intractability
+
+## Contents
+```{toctree}
+:titlesonly:
+:glob:
+
+*
+```

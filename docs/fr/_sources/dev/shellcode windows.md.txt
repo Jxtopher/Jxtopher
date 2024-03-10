@@ -1,0 +1,206 @@
+# Shellcode for windows
+
+{bdg-primary-line}`2010`
+
+For our first shellcode, we will create a shellcode in x86-32 to display a "Hello, World!" message. To do this, it is helpful to have some knowledge of the Windows API.
+
+## Designing a shellcode
+
+We design this basic code on C in shellcode. Afterwards, we re-write in below in assembly, for to do that, we need Windows API to used the primitive function.
+
+```cpp
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World\n");
+    retrun 0;
+}
+```
+
+We use the `printf` which is contained in the library **crtdll.dll**.
+I chose dynamic library not for a question of performance, quite simply to get in touch with dynamic libraries. 
+The `nmdll` command allows you to know the address associated with a function in relation to a library. 
+The address may change depending on the operating system version. 
+Here is the result:
+
+```bash
+ > nmdll crtdll.dll | grep printf
+ 6C243255        _cprintf
+ 6C249847        _snprintf
+ 6C24989F        _snwprintf
+ 6C24B2D7        _vsnprintf
+ 6C24B32E        _vsnwprintf
+ 6C24C06C        fprintf
+ 6C24C792        fwprintf
+ 6C24D8F8        printf
+ 6C24E5C5        sprintf
+ 6C24F8FA        swprintf
+ 6C250097        vfprintf
+ 6C2500EE        vfwprintf
+ 6C250145        vprintf
+ 6C25018F        vsprintf
+ 6C2501E7        vswprintf
+ 6C25025D        vwprintf
+ 6C250D27        wprintf
+```
+
+We replace `retrun 0` by `exit` function. Also contained in the library `crtdll.dll`. 
+Use `nmdll` to know the address associated with this function:
+
+```bash
+> nmdll crtdll.dll | grep exit
+6C242132        __dllonexit
+6C25E004        _aexit_rtn_dll
+6C241DB8        _amsg_exit
+6C241F91        _c_exit
+6C241F82        _cexit
+6C241F71        _exit
+6C24205F        _onexit
+6C2420E7        atexit
+6C241F60        exit
+```
+
+## Construction du shellcode
+
+We build the shellcode with the **nasm** compiler.
+
+```nasm
+global	_main
+    extern	_printf
+    extern _exit
+
+    section .data
+    message	db	'Hello, World',12, 0
+
+    section .text
+_main:
+    push	message
+    call	_printf
+
+    xor ebx, ebx
+    push ebx
+    call _exit
+```
+
+Deleting all sections
+
+```nasm
+ global	_main
+	extern	_printf
+	extern _exit
+
+ _main:
+
+ jmp one
+ two:
+
+ call	_printf
+
+ xor ebx, ebx
+ push ebx
+ call _exit
+
+ one:
+ call two
+ db	'Hello, World',12, 0
+```
+
+Removing keyword `extern`. 
+We saw above that he had an address.
+So we will replace them with their address:
+
+```nasm
+ global	_main
+
+ _main:
+	jmp short one
+	two:
+	mov eax, 0x6C24D8F8
+	call eax
+
+	xor ebx, ebx
+	push ebx
+
+	mov eax, 0x6C241F60
+	call ebx
+
+	one:
+	call two
+	db	'Hello, World',12
+```
+
+Compilation
+
+```bash
+nasm -f win32 helloworld.asm ld helloworld.obj
+```
+
+After compilation we get the opcodes
+
+```bash
+> objdump.exe -d .\helloworld.obj
+
+.\helloworld2.obj:     file format pe-i386
+
+
+Disassembly of section .text:
+
+00000000 <_main>:
+ 0:   eb 11                   jmp    13 <one>
+
+00000002 <two>:
+ 2:   b8 f8 d8 24 6c          mov    $0x6c24d8f8,%eax
+ 7:   ff d0                   call   *%eax
+ 9:   bb 60 1f 24 6c          mov    $0x6c241f60,%ebx
+ e:   31 c0                   xor    %eax,%eax
+10:   50                      push   %eax
+11:   ff d3                   call   *%ebx
+
+00000013 <one>:
+13:   e8 ea ff ff ff          call   2 <two>
+18:   48                      dec    %eax
+19:   65                      gs
+1a:   6c                      insb   (%dx),%es:(%edi)
+1b:   6c                      insb   (%dx),%es:(%edi)
+1c:   6f                      outsl  %ds:(%esi),(%dx)
+1d:   2c 20                   sub    $0x20,%al
+1f:   77 6f                   ja     90 <one+0x7d>
+21:   72 6c                   jb     8f <one+0x7c>
+23:   64                      fs
+24:   0a                      .byte 0xa
+```
+
+This gives us the following opcodes:
+
+```
+\\xeb\\x11\\xb8\\xf8\\xd8\\x24\\x6c\\xff\\xd0\\xbb\\x60\\x1f\\x24
+\\x6c\\x31\\xc0\\x50\\xff\\xd3\\xe8\\xea\\xff\\xff\\xff\\x48\\x65
+\\x6c\\x6c\\x6f\\x2c\\x20\\x77\\x6f\\x72\\x6c\\x64\\x0a
+```
+
+Let's test the shellcode:
+
+```c
+#include <windows.h>
+
+char shellcode[] = "\\xEB\\x11\\xB8\\xF8\\xD8\\x24\\x6C\\xFF\\xD0\\xBB\\x60\\x1F\\x24\\x6C"
+                   "\\x31\\xC0\\x50\\xFF\\xD3\\xE8\\xEA\\xFF\\xFF\\xFF\\x48\\x65\\x6C\\x6C"
+                   "\\x6F\\x2C\\x20\\x77\\x6F\\x72\\x6C\\x64\\x0A";
+
+int main (int argc, char **argv) {
+    HMODULE lib = LoadLibrary("crtdll.dll");
+    int (*ret)();              /* ret is a function pointer */
+    ret = (int(*)())shellcode; /* ret points to our shellcode */
+                                /* shellcode is type casted as a function */
+    (int)(*ret)();             /* execute as function shellcode[] */
+    FreeLibrary(lib);
+    exit(0);                   /* exit() */
+}
+ ```
+
+Be careful in this shellcode, it is absolutely necessary to load the library `crtdll.dll` otherwise the shellcode will not be able to work because the address of the exit and printf functions cannot be found.
+
+## Refs:
+
+* [X86 Opcode and Instruction Reference](http://ref.x86asm.net/coder64-abc.html) ([On archive.org](https://web.archive.org/web/20240106111309/http://ref.x86asm.net/coder64-abc.html))
+

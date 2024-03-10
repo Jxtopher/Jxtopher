@@ -1,0 +1,47 @@
+---
+hide-toc: true
+---
+
+# Welcome 👋
+
+
+```shell
+$ whoami
+Jxtopher
+```
+
+
+
+```{toctree}
+:hidden:
+
+curiosity/index
+```
+
+```{toctree}
+:hidden:
+
+dev/index
+```
+
+```{toctree}
+:hidden:
+
+infra/index
+```
+
+{bdg-primary-line}`2025`
+
+- [Bootstrap GitOps with k3s](infra/bootstrap-k3s.md)
+- [Database disk footprint](infra/db%20disk%20footprint.md)
+- [Getting started apache kafka](dev/getting-started-apache-kafka.md)
+- [Rerverse engineering](dev/reverse-engineering.md)
+
+{bdg-primary-line}`2024`
+
+- [N-Queens with SAT Solver](curiosity/n-queens-with-sat-solver.md)
+- [App configuration](dev/app%20configuration.md)
+- [profiling-tools.md](dev/profiling-tools.md)
+- [backup and integrity](infra/data/backup%20and%20integrity.md)
+- [zpool setup](infra/data/zpool.md)
+- [Tmux](infra/shell/tmux.md)

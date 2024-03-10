@@ -1,0 +1,632 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../_static/favicon/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="../_static/favicon/favicon-48x48.png" sizes="48x48" rel="icon" type="image/png">
+    <link href="../_static/favicon/favicon-64x64.png" sizes="64x64" rel="icon" type="image/png">
+    <link rel="apple-touch-icon" href="../_static/favicon/favicon-128x128.png" sizes="128x128" type="image/png">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKPZNDVNZZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-HKPZNDVNZZ');
+    </script>
+    <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="Tools" href="tools.html">
+        <link rel="prefetch" href="../_static/logo-light-mode.svg" as="image">
+        <link rel="prefetch" href="../_static/logo-dark-mode.svg" as="image">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>Workstation config - Eggdoc</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css?v=b4b7a797" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/eggdoc.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Eggdoc</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logo-light-mode.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logo-dark-mode.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><div id="language-switcher" style="display: flex; gap: 10px; justify-content: center;">
+    <a id="link-en" href="../../en/infra/workstation config.html" style="text-decoration: none; font-size: 1.2rem;">🇺🇸</a>
+    <a id="link-fr" href="../../fr/infra/workstation config.html" style="text-decoration: none; font-size: 1.2rem;">🇫🇷</a>
+</div>
+
+<script>
+    const currentUrl = window.location.href;
+    
+    // On cache le lien qui correspond à la langue actuelle
+    if (currentUrl.includes('/en/')) {
+        document.getElementById('link-en').style.display = 'none';
+    } else if (currentUrl.includes('/fr/')) {
+        document.getElementById('link-fr').style.display = 'none';
+    }
+</script><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../curiosity/index.html">🔬 Curiosity</a><input aria-label="Toggle navigation of 🔬 Curiosity" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../curiosity/TSP.html">Travelling salesman problem</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../curiosity/game-of-life.html">Game of life</a><input aria-label="Toggle navigation of Game of life" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../curiosity/game-of-life/plot_n3/plot_n3.html">n = 3, <span class="math notranslate nohighlight">\(uniq_{count}\)</span> = 51</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../curiosity/n-queens-with-sat-solver.html">N-Queens with SAT Solver</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../curiosity/peaceable-armies-of-queens.html">Peaceable Armies of Queens</a><input aria-label="Toggle navigation of Peaceable Armies of Queens" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../curiosity/peaceable-armies-of-queens/plot_n4/plot_n4.html">n = 4, count = 112</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curiosity/peaceable-armies-of-queens/plot_n5/plot_n5.html">n = 5, count = 18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curiosity/peaceable-armies-of-queens/plot_n6/plot_n6.html">n = 6, count = 560</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curiosity/peaceable-armies-of-queens/plot_n7/plot_n7.html">n = 7, count = 304</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">🧩 Dev</a><input aria-label="Toggle navigation of 🧩 Dev" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/analyze%20forensic.html">Tooling for analyze forensic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/app%20configuration.html">App configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/call%20function%20in%20c.html">Call function in C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/debugging-with-gdb.html">Debugging with GDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/getting-started-apache-kafka.html">Getting started - Apache Kafka</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/nasm%20hellworld.html">NASM - Hello, World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/profiling-tools.html">Profiling tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/pyplot-snippet.html">Pyplot snippet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/regular%20expression.html">Regular expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/reverse-engineering.html">Reverse engineering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/shellcode%20windows.html">Shellcode for windows</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">🖧 Infra</a><input aria-label="Toggle navigation of 🖧 Infra" checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="data/index.html">Data management</a><input aria-label="Toggle navigation of Data management" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="data/backup%20and%20integrity.html">Backup and integrity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data/mdadm.html">Software raid - mdadm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data/zpool.html">zpool setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="shell/index.html">Shell</a><input aria-label="Toggle navigation of Shell" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="shell/monitoring-tools.html">Monitoring tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shell/netkit.html">Lab of network - netkit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shell/tmux.html">Tmux</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bootstrap-k3s.html">Bootstrap GitOps with k3s</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chroot%20jail.html">chroot jail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db%20disk%20footprint.html">Database disk footprint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firefox-configuration.html">Firefox configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initramfs.html">Initramfs mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lxc.html">Containers with LXC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx.html">nginx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server%20config.html">Server config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Workstation config</a></li>
+</ul>
+</li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="workstation-config">
+<h1>Workstation config<a class="headerlink" href="#workstation-config" title="Link to this heading">¶</a></h1>
+<p><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">2018</span></p>
+<section id="general-aspect">
+<h2>General aspect<a class="headerlink" href="#general-aspect" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f.Lux</span></code> adds visual comfort to the display level. The tool regulates the amount of blue color automatically during the day.</p></li>
+<li><p>High resolution screen (4K) reduces visual fatigue.</p></li>
+<li><p>For laptops, in the case of office applications, matte panel screens are preferred.
+*Each position must have an identifiable name.</p></li>
+</ul>
+</section>
+<section id="software">
+<h2>Software<a class="headerlink" href="#software" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Office:</p>
+<ul>
+<li><p>pdf : Gaaiho reader, Acrobat Reader, evince, PDFcreator, Pdf Stream Dumper, PDF blender (fusion de pdf)</p></li>
+<li><p>djvu : DjView</p></li>
+<li><p>epub : Adobe Digital Editions</p></li>
+<li><p>Ghostscript</p></li>
+<li><p>EPS : EPS Viewer</p></li>
+<li><p>Word : libreOffice, MiKTeX, Texmaker, JabRef, Notepad++</p></li>
+<li><p>Image processing : GIMP, Inkscape (SVG), Pencil</p></li>
+<li><p>Personal accounting : MoneyManagerEX</p></li>
+</ul>
+</li>
+<li><p>AdminSys:</p>
+<ul>
+<li><p>Cisco Packet Tracer</p></li>
+<li><p>LiLi USB Creator</p></li>
+<li><p>mRemoteNG, X2Go Client, Tera Term</p></li>
+<li><p>VirtualBox</p></li>
+<li><p>Unified Remote</p></li>
+<li><p>Wireshark</p></li>
+</ul>
+</li>
+<li><p>Web clients:</p>
+<ul>
+<li><p>ftp : FileZilla</p></li>
+<li><p>browser : Opera, Chrome, Firefox</p></li>
+<li><p>messaging : qTox, Skype, Slack</p></li>
+<li><p>e-mail : Thunderbird</p></li>
+<li><p>Dropbox, MEGAsync</p></li>
+</ul>
+</li>
+<li><p>Dev:</p>
+<ul>
+<li><p>make, cmake</p></li>
+<li><p>git</p></li>
+<li><p>java, SWI-Prolog, NetLogo, R</p></li>
+<li><p>Qt</p></li>
+<li><p>Atom, NetBeans, Rstudio</p></li>
+<li><p>IDA Pro free</p></li>
+<li><p>pgAdmin</p></li>
+</ul>
+</li>
+<li><p>Music : audacity, LMMS, MuseScore, VLC</p></li>
+<li><p>Data processing</p>
+<ul>
+<li><p>GeoGebra</p></li>
+<li><p>Gephi</p></li>
+<li><p>logisim</p></li>
+<li><p>QGis</p></li>
+<li><p>CSVed</p></li>
+</ul>
+</li>
+<li><p>Security:</p>
+<ul>
+<li><p>KeePass</p></li>
+<li><p>Kleopatra</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="backups">
+<h2>Backups<a class="headerlink" href="#backups" title="Link to this heading">¶</a></h2>
+<p>Data is backup every day to a remote file server. Incremental backup is preferred, it has the advantage of being the fastest. On the other hand, the restoration time is harder depending on the number of incremental backups carried out after a full backup. Please note that before traveling, a complete backup must be made. We use the command <code class="docutils literal notranslate"><span class="pre">dar</span></code>.</p>
+<p>A complete backup of the <em>DIR_SOURCE</em> directory is performed. The backup is stored in the <em>DIR_BACKUP</em> directory. A hash of the backup is calculated.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dar<span class="w"> </span>-R<span class="w"> </span>DIR_SOURCE<span class="w"> </span>-c<span class="w"> </span>DIR_BACKUP/NAME_BACKUP-000-full-<span class="nv">$DATE</span><span class="w"> </span>--hash<span class="w"> </span>md5<span class="w"> </span>-q
+</pre></div>
+</div>
+<p>To make a complete backup of the <code class="docutils literal notranslate"><span class="pre">DIR_SOURCE</span></code> directory on the remote server <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> using the ssh protocol. The destination directory is <code class="docutils literal notranslate"><span class="pre">SSH_BACKUP_PATH</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">SSH_BACKUP_LOGIN</span><span class="o">=</span>user@127.0.0.1
+dar<span class="w"> </span>-R<span class="w"> </span>DIR_SOURCE<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span>--hash<span class="w"> </span>md5<span class="w"> </span>-q<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$SSH_BACKUP_LOGIN</span><span class="w"> </span><span class="s2">&quot;cat &gt; </span><span class="nv">$SSH_BACKUP_PATH</span><span class="s2">/</span><span class="nv">$NAME_BACKUP</span><span class="s2">-full-</span><span class="nv">$DATE</span><span class="s2">.1.dar&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="integrity">
+<h2>Integrity<a class="headerlink" href="#integrity" title="Link to this heading">¶</a></h2>
+<p>For directories that change little over time, it is recommended to hash the files to verify their integrity, as physical media degrades over time and file system error detection and correction programs have variable effectiveness. By combining this with multi-media backup (SSH, HDD, optical disk, or magnetic tape), data loss can be minimized. Each storage medium has different physical constraints and degradation times, so the probability of all media failing at the same time is lower the more different types of media are used.</p>
+</section>
+<section id="password-management">
+<h2>Password management<a class="headerlink" href="#password-management" title="Link to this heading">¶</a></h2>
+<p>All passwords must be saved in an encrypted file. If the file is stolen, the hacker will have more difficulty learning the passwords. Because passwords are saved to a file, they can be longer and more complex. Authentications are more secure. We use double authentication to access passwords: by file containing random characters and by passwords. The password manager <code class="docutils literal notranslate"><span class="pre">KeePass</span></code> is suitable for this job.</p>
+<p>Password management is organized into three levels:</p>
+<ol class="arabic simple">
+<li><p>very sensitive and little used like bank passwords,</p></li>
+<li><p>sensitive and used as site login passwords,</p></li>
+<li><p>client passwords, widely used, access to servers, applications, etc…</p></li>
+</ol>
+<p>KeePass : https://keepass.info/</p>
+</section>
+<section id="blacklist-hosts">
+<h2>Blacklist : hosts<a class="headerlink" href="#blacklist-hosts" title="Link to this heading">¶</a></h2>
+<p>In order to reduce advertisements and malicious sites, sites offer blacklists blocking similar domain names. The files must therefore be completed:</p>
+<ul class="simple">
+<li><p>linux : <code class="docutils literal notranslate"><span class="pre">/etc/hosts</span></code></p></li>
+<li><p>windows : <code class="docutils literal notranslate"><span class="pre">C:\Windows\System32\drivers\etc\hosts</span></code></p></li>
+</ul>
+<p>See : https://someonewhocares.org/hosts/</p>
+<p>To add as a browser plug-in:</p>
+<ul class="simple">
+<li><p>uBlock Origin</p></li>
+</ul>
+</section>
+<section id="setting-up-a-proxy">
+<h2>Setting up a proxy<a class="headerlink" href="#setting-up-a-proxy" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Download and install Squid (http://squid.diladele.com/#home)</p></li>
+</ul>
+</section>
+<section id="domain-blacklist">
+<h2>Domain blacklist<a class="headerlink" href="#domain-blacklist" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Edit the /etc/squid/squid.conf file and add the following settings:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>acl<span class="w"> </span>domain_blacklist<span class="w"> </span>dstdomain<span class="w"> </span><span class="s2">&quot;/etc/squid/domain_blacklist&quot;</span>
+http_access<span class="w"> </span>deny<span class="w"> </span>all<span class="w"> </span>domain_blacklist
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Create the /etc/squid/domain_blacklist.txt file and add the domains you want to block. For example, to block access to example.com including subdomains and to block example.net add:</p></li>
+</ol>
+<div class="highlight-vim notranslate"><div class="highlight"><pre><span></span> .example.<span class="k">com</span>
+ example.net
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Restart the server, the <code class="docutils literal notranslate"><span class="pre">domain_blacklist</span></code> file must not be empty.</p></li>
+</ol>
+</section>
+<section id="firewall-on-linux">
+<h2>Firewall on Linux<a class="headerlink" href="#firewall-on-linux" title="Link to this heading">¶</a></h2>
+<p><span class="sd-sphinx-override sd-badge sd-bg-danger sd-bg-text-danger">Deprecated</span></p>
+<p>Installation of the <code class="docutils literal notranslate"><span class="pre">iptables-persistent</span></code> package for automatic implementation of iptables settings at startup.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt<span class="w"> </span>install<span class="w"> </span>iptables-persistent
+</pre></div>
+</div>
+<p>Addition of basic rules in iptables for IPv4:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loopback</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-d<span class="w"> </span><span class="m">127</span>.0.0.0/8<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+<span class="c1"># Authorization of new connections from the machine and not from outside</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>ESTABLISHED,RELATED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>NEW,ESTABLISHED,RELATED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+iptables<span class="w"> </span>-P<span class="w"> </span>INPUT<span class="w"> </span>DROP
+iptables<span class="w"> </span>-P<span class="w"> </span>OUTPUT<span class="w"> </span>DROP
+iptables<span class="w"> </span>-P<span class="w"> </span>FORWARD<span class="w"> </span>DROP
+</pre></div>
+</div>
+<p>In order to make the rules added in iptables permanent, they are saved in the <em>rules.v4</em> file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>iptables-save<span class="w"> </span>&gt;<span class="w"> </span>/etc/iptables/rules.v4
+ip6tables-save<span class="w"> </span>&gt;<span class="w"> </span>/etc/iptables/rules.v6
+</pre></div>
+</div>
+<p>Addition of basic rules in iptables for IPv6:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loopback</span>
+ip6tables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-d<span class="w"> </span>::1/128<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+<span class="c1"># Authorization of new connections from the machine and not from outside</span>
+ip6tables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>ESTABLISHED,RELATED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+ip6tables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>NEW,ESTABLISHED,RELATED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</pre></div>
+</div>
+<p>In order to make the rules added in ip6tables permanent, they are saved in the <em>rules.v4</em> file</p>
+<p>Le service peut ensuite être démarrer</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>service<span class="w"> </span>netfilter-persistent<span class="w"> </span>start
+</pre></div>
+</div>
+<p>Example of rules:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#SSH</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">22</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">1723</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+<span class="c1">#SAMBA</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>udp<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.0/24<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>-m<span class="w"> </span>udp<span class="w"> </span>--dport<span class="w"> </span><span class="m">137</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>udp<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.0/24<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>-m<span class="w"> </span>udp<span class="w"> </span>--dport<span class="w"> </span><span class="m">138</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.0/24<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>--state<span class="w"> </span>NEW<span class="w"> </span>-m<span class="w"> </span>tcp<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">139</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.0/24<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>--state<span class="w"> </span>NEW<span class="w"> </span>-m<span class="w"> </span>tcp<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">445</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+<span class="c1">#HTTPS</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w">	</span>--dport<span class="w"> </span><span class="m">80</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w">	</span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+
+<span class="c1">#Proxy</span>
+iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.198/32<span class="w">  </span>--dport<span class="w"> </span><span class="m">3128</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</pre></div>
+</div>
+<p>When an <code class="docutils literal notranslate"><span class="pre">ssh</span></code> server is installed on the machine, you must use a tool that prevents strong password brute-forcing such as <code class="docutils literal notranslate"><span class="pre">denyHosts</span></code> or <code class="docutils literal notranslate"><span class="pre">fail2ban</span></code>. This tool is useless when password authentication is disabled.</p>
+</section>
+<section id="authority-certificate-import">
+<h2>Authority certificate import<a class="headerlink" href="#authority-certificate-import" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>On Windows open <code class="docutils literal notranslate"><span class="pre">certmgr.msc</span></code> and add the certificate</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/certmgr.png"><img alt="../_images/certmgr.png" src="../_images/certmgr.png" style="width: 100%;" />
+</a>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="tools.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Tools</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2010-2026, Jxtopher
+            </div>
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/jxtopher/" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://www.root-me.org/jxtopher" aria-label="Root-Me">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 196.4 251.7">
+                    <path d="m 100.6,201.2 c 0,0 0,0 0,0 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.1 -0.2,-0.2 0,0 0,0 0,0 -0.1,0 -0.1,-0.1 -0.2,-0.1 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.2,-0.1 -0.1,0 -0.2,0 -0.3,-0.1 -0.1,0 -0.2,0 -0.3,0 -0.1,0 -0.2,0 -0.3,0 -0.1,0 -0.2,0 -0.3,0 -0.1,0 -0.2,0 -0.3,0 -0.1,0 -0.2,0 -0.3,0.1 -0.1,0 -0.2,0.1 -0.2,0.1 -0.1,0 -0.2,0.1 -0.3,0.1 -0.1,0 -0.2,0.1 -0.3,0.2 -0.1,0 -0.1,0.1 -0.2,0.1 0,0 0,0 0,0 -0.1,0.1 -0.1,0.1 -0.2,0.2 -0.1,0.1 -0.2,0.2 -0.2,0.2 0,0 0,0 0,0 l -8.1,10.1 c -1,1.3 -0.8,3.1 0.5,4.1 0.5,0.4 1.2,0.6 1.8,0.6 0.9,0 1.7,-0.4 2.3,-1.1 l 0.1,-0.1 c 3,-3.7 8.6,-3.7 11.5,0 l 0.1,0.1 c 0.6,0.7 1.4,1.1 2.3,1.1 0.6,0 1.3,-0.2 1.8,-0.6 1.3,-1 1.5,-2.9 0.5,-4.1 z"/>
+                    <path d="m 87.1,30.4 c -4.1,0 -7.5,3.2 -7.7,7.3 l -15.3,5.6 c -0.8,0.3 -1.4,1 -1.4,1.9 v 9.7 H 50.4 c -0.9,-3.3 -3.8,-5.7 -7.4,-5.7 -4.2,0 -7.7,3.4 -7.7,7.7 0,4.2 3.4,7.7 7.7,7.7 3.6,0 6.5,-2.4 7.4,-5.7 h 14.3 c 1.1,0 2,-0.9 2,-2 V 46.6 l 13.5,-5 c 1.3,2.5 3.9,4.2 6.8,4.2 4.2,0 7.7,-3.4 7.7,-7.7 0.1,-4.2 -3.4,-7.7 -7.6,-7.7 z"/>
+                    <path d="m 70.9,173.6 c -2.5,-0.9 -4.9,-1.8 -7.2,-2.8 -1.7,-0.8 -3.4,-1.6 -5,-2.4 3.8,3.8 13,10.6 22.9,10.8 0.6,-0.7 1.1,-1.4 1.5,-2.3 -1.5,-0.3 -3,-0.6 -4.5,-1 -2.7,-0.7 -5.2,-1.4 -7.7,-2.3 z"/>
+                    <path d="m 196.4,103.8 c 0,-4.7 -0.3,-9.4 -1,-13.9 0,-0.3 -0.1,-0.6 -0.1,-0.9 -6.1,-39.7 -36.2,-72.3 -75.8,-81 -1,-4.5 -5,-7.9 -9.8,-7.9 -5.6,0 -10.1,4.5 -10.1,10.1 0,4.8 3.4,8.8 7.9,9.8 v 36.9 c 0,0.6 0.3,1.2 0.8,1.6 0.3,0.2 0.7,0.3 1.1,0.3 0.2,0 0.5,0 0.7,-0.1 l 14.8,-5.6 c 1,1.5 2.5,2.5 4.3,3 V 73.5 C 121.7,82.7 112.4,91 102.5,98.4 L 91.2,72.2 c 2.1,-1.4 3.5,-3.7 3.5,-6.4 0,-4.2 -3.4,-7.7 -7.7,-7.7 -4.2,0 -7.7,3.4 -7.7,7.7 0,4.2 3.4,7.7 7.7,7.7 0.1,0 0.3,0 0.4,0 l 11.8,27.3 c -6.9,5 -14,9.5 -21,13.6 L 44.6,104.3 c -0.4,-0.1 -0.8,-0.1 -1.2,0.1 l -10,3.9 c -1.4,-1.9 -3.6,-3.1 -6.2,-3.1 -4.2,0 -7.7,3.4 -7.7,7.7 0,4.2 3.4,7.7 7.7,7.7 4.2,0 7.7,-3.4 7.7,-7.7 0,-0.3 -0.1,-0.6 -0.1,-0.9 l 9.4,-3.7 29.3,8.8 c -25,14 -47.4,22.1 -51.1,23.4 l -1.8,0.6 c -1.6,-1.2 -3.6,-1.9 -5.8,-1.9 -0.1,0 -0.2,0 -0.3,0 C 9.8,128.1 7.4,116 7.4,103.9 7.4,97.9 8,92 9.1,86.3 H 53 c 0.9,3.3 3.8,5.7 7.4,5.7 4.2,0 7.7,-3.4 7.7,-7.7 0,-4.2 -3.4,-7.7 -7.7,-7.7 -3.6,0 -6.5,2.4 -7.4,5.7 H 10 c 8.1,-32.9 34.1,-59.2 67.7,-67 1.8,2.9 5,4.9 8.6,4.9 5.6,0 10.1,-4.5 10.1,-10.1 C 96.4,4.5 91.9,0 86.3,0 81.4,0 77.4,3.5 76.4,8 32.3,18 0,57.7 0,103.7 c 0,13.1 2.6,26.2 7.7,38.2 -1.9,1.8 -3,4.4 -3,7.2 0,4.5 2.9,8.2 6.9,9.6 v 39.4 c 0,0.7 0.2,1.4 0.6,2 l 2.2,1.5 29.9,21.1 v 25.2 c 0,2.1 1.7,3.8 3.8,3.8 h 100 c 2.1,0 3.8,-1.7 3.8,-3.8 v -25.2 l 30,-21.1 2.2,-1.6 c 0.4,-0.6 0.6,-1.3 0.6,-2 v -39.7 c 3.7,-1.5 6.3,-5.1 6.3,-9.3 0,-2.6 -1,-5 -2.6,-6.8 5.3,-11.9 8,-25.1 8,-38.4 z M 82.8,6.9 c 0.9,-1 2.2,-1.6 3.6,-1.6 2.7,0 4.9,2.2 4.9,4.9 0,2.7 -2.2,4.9 -4.9,4.9 -1,0 -1.9,-0.3 -2.7,-0.8 -1.3,-0.9 -2.2,-2.4 -2.2,-4 0,-1.4 0.5,-2.6 1.3,-3.4 z m 22,3.2 c 0,-2.7 2.2,-4.9 4.9,-4.9 1.4,0 2.6,0.6 3.5,1.5 0.8,0.9 1.3,2 1.3,3.3 0,1.6 -0.8,3.1 -2.1,4 -0.8,0.6 -1.7,0.9 -2.8,0.9 -2.6,0.1 -4.8,-2.1 -4.8,-4.8 z m 18.8,38.5 c 0,0.3 0.1,0.5 0.1,0.7 l -12.2,4.6 v -34 c 3,-0.5 5.5,-2.3 6.9,-4.8 10.7,2.4 20.7,6.7 29.6,12.6 -0.1,14.8 -5.8,28.4 -14.8,40.7 V 56 c 3.3,-0.9 5.7,-3.8 5.7,-7.4 0,-4.2 -3.4,-7.7 -7.7,-7.7 -4.2,0.1 -7.6,3.5 -7.6,7.7 z M 14.9,154 c -1.2,0 -2.3,-0.5 -3.2,-1.2 -1,-0.9 -1.7,-2.2 -1.7,-3.6 0,-0.6 0.1,-1.2 0.3,-1.7 0.7,-1.8 2.5,-3.1 4.5,-3.1 0.9,0 1.7,0.3 2.4,0.7 1.4,0.8 2.4,2.4 2.4,4.2 0,0.9 -0.3,1.7 -0.7,2.4 -0.7,1.4 -2.2,2.3 -4,2.3 z m 170,-1.9 c -0.9,1.1 -2.3,1.9 -3.8,1.9 -1.4,0 -2.6,-0.6 -3.5,-1.5 -0.8,-0.9 -1.3,-2 -1.3,-3.3 0,-2.1 1.3,-3.9 3.2,-4.5 0.5,-0.2 1.1,-0.3 1.7,-0.3 2.3,0 4.3,1.7 4.8,3.9 0.1,0.3 0.1,0.6 0.1,1 -0.2,1 -0.6,2 -1.2,2.8 z m -3,-13 c -0.3,0 -0.6,0 -0.9,0 -5.6,0 -10.1,4.5 -10.1,10.1 0,4.3 2.7,8 6.6,9.4 v 36.8 L 146,217.6 c -1,0.7 -1.6,1.9 -1.6,3.1 v 21.2 c 0,1.2 -1,2.2 -2.2,2.2 h -11.7 c -1.2,0 -2.2,-1 -2.2,-2.2 v -7.6 c 0,-2 -1.4,-3.8 -3.4,-4 -2.3,-0.2 -4.2,1.6 -4.2,3.8 v 7.9 c 0,1.2 -1,2.2 -2.2,2.2 h -14.3 c -1.2,0 -2.2,-1 -2.2,-2.2 v -11.7 c 0,-2 -1.4,-3.8 -3.4,-4 -2.3,-0.2 -4.2,1.6 -4.2,3.8 v 12 c 0,1.2 -1,2.2 -2.2,2.2 H 77.9 c -1.2,0 -2.2,-1 -2.2,-2.2 v -7.8 c 0,-2 -1.4,-3.8 -3.4,-4 -2.3,-0.2 -4.2,1.6 -4.2,3.8 v 7.9 c 0,1.2 -1,2.2 -2.2,2.2 H 54.2 c -1.2,0 -2.2,-1 -2.2,-2.2 v -21.2 c 0,-1.2 -0.6,-2.4 -1.6,-3.1 L 19,195.5 v -37.2 c 3.5,-1.6 5.9,-5.1 5.9,-9.2 0,-0.6 -0.1,-1.2 -0.2,-1.8 4,-1.4 34.5,-12.3 64.5,-31 40.6,-25.3 63.1,-54 65.7,-83.5 17.5,14.1 29.6,34.5 33.1,57.4 -0.5,50.1 -87.8,81 -88.7,81.3 -0.2,0.1 -0.7,0.2 -1.1,0.4 -1.1,-0.2 -2.2,-0.4 -3.4,-0.6 -0.8,-0.2 -1.7,-0.3 -2.5,-0.5 -1.3,-0.2 -2.6,-0.5 -3.9,-0.8 -0.2,-0.1 -0.5,-0.1 -0.7,-0.1 -0.5,-0.1 -1,-0.2 -1.5,-0.3 -0.6,-0.1 -1.2,-0.3 -1.8,-0.4 -1.4,-0.3 -2.8,-0.6 -4.1,-1 -2.5,-0.6 -4.9,-1.3 -7.3,-1.9 -2.3,-0.7 -4.7,-1.3 -6.9,-2 -0.1,0 -0.1,0 -0.2,0 -1.7,-0.5 -3.3,-1 -4.9,-1.6 -0.5,-0.2 -1.1,-0.4 -1.6,-0.5 -0.8,-0.3 -1.5,-0.5 -2.2,-0.7 -1.3,-0.4 -2.5,-0.8 -3.6,-1.3 0,0 -0.1,0 -0.1,0 -1.8,-0.6 -3.4,-1.2 -4.8,-1.8 -1.5,-0.6 -2.8,-1.1 -3.8,-1.5 -1,-0.5 -1.9,-0.8 -2.4,-1.1 -0.6,-0.3 -0.9,-0.4 -0.9,-0.4 0,0 0.2,0.3 0.6,0.7 0.4,0.5 1,1.2 1.9,2 0.8,0.8 1.9,1.8 3.2,2.8 1.3,1 2.8,2.1 4.4,3.2 0,0 0,0 0.1,0 -0.6,2 -1,4.2 -1,6.4 0,11.5 9.4,20.9 20.9,20.9 8.9,0 16.5,-5.6 19.5,-13.5 1,0.1 2.1,0.2 3.1,0.3 1.8,0.1 3.5,0.1 5.1,0.1 0.1,0 0.2,0.1 0.3,0.1 l 16.9,17.2 c 4.3,4.3 11,5 16,1.7 L 159,182.5 c 2.3,-1.5 3.8,-4.1 3.8,-6.9 v -30.4 c 10.2,-8.1 19.4,-17.7 25.4,-28.6 -1.1,7.9 -3.2,15.4 -6.3,22.5 z m -98.8,37.8 c -0.4,0.8 -1,1.6 -1.5,2.3 v 0 c -2.4,2.8 -6,4.6 -10,4.6 -4,0 -7.6,-1.8 -10,-4.6 -2,-2.3 -3.1,-5.3 -3.1,-8.5 0,-0.8 0.1,-1.5 0.2,-2.3 0,0 0,0 0,0 1.6,0.8 3.3,1.6 5,2.4 2.3,1 4.7,2 7.2,2.8 2.5,0.9 5.1,1.6 7.7,2.3 1.5,0.4 3,0.7 4.5,1 z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Workstation config</a><ul>
+<li><a class="reference internal" href="#general-aspect">General aspect</a></li>
+<li><a class="reference internal" href="#software">Software</a></li>
+<li><a class="reference internal" href="#backups">Backups</a></li>
+<li><a class="reference internal" href="#integrity">Integrity</a></li>
+<li><a class="reference internal" href="#password-management">Password management</a></li>
+<li><a class="reference internal" href="#blacklist-hosts">Blacklist : hosts</a></li>
+<li><a class="reference internal" href="#setting-up-a-proxy">Setting up a proxy</a></li>
+<li><a class="reference internal" href="#domain-blacklist">Domain blacklist</a></li>
+<li><a class="reference internal" href="#firewall-on-linux">Firewall on Linux</a></li>
+<li><a class="reference internal" href="#authority-certificate-import">Authority certificate import</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    </body>
+</html>

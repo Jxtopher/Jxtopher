@@ -1,0 +1,55 @@
+# Reverse engineering
+
+{bdg-primary-line}`2025`
+{bdg-primary-line}`Reverse engineering`
+
+Software reverse engineering is the art of analyzing how a program works without having access to its source code.
+It is used in various contexts, such as analyzing malware, detecting vulnerabilities, analyzing execution performance, and rewriting a program whose source code has been lost...
+
+Two techniques are possible for reverse engineering a program: dynamic and static analysis.
+Dynamic analysis is the process of evaluating a program's behavior while it is running. This contrasts with static analysis, which examines code without execution.
+These two techniques are both independent and complementary.
+
+Regardless of the techniques used, a basic understanding of assembly language is essential.
+
+## Tools for binary analysis (ELF/PE) 
+
+### Dynamic analysis
+
+* On linux
+  * **[Ghidra](https://github.com/NationalSecurityAgency/ghidra)** disassembler - Software Reverse Engineering Framework
+  * **[REDasm](https://github.com/REDasmOrg/REDasm)** disassembler
+  * **hexcurse** hexadecimal editor
+  * **[objdump](https://en.wikipedia.org/wiki/Objdump)**  disassembler which supports Intel and AT&T syntax
+  * **strings** extract all strings from a binary file
+  * **[radare](https://radare.org/)**  reversing toolkit
+  * **nm** lists all symbols
+  * **readelf** Displays ELF file metadata
+
+* On windows
+  * **IDA** disassembler
+  * **[HxD](https://mh-nexus.de/en/programs.php)** hexadecimal editor
+  * **Pied**, **[studPE](https://www.cgsoftlabs.ro/studpe.html)** Analyzes executable signatures to determine if binaries are compressed or encrypted
+  * **PEview** : Displays PE (Protable Executable) file metadata
+
+### Static analysis
+
+* On linux
+  * **strace** monitors and records all system calls made by a program
+  * **ltrace** monitors and records library function calls made by a program
+  * **gdb** gdb: the GNU Debugger, a powerful command-line debugger
+  * **[edb](https://www.codef00.com/projects)** a cross-platform Qt based debugger
+  * **lsof** lists all open files and network connections
+
+* On windows
+  * **NtTrace** monitors and logs all Windows API calls made by a program
+  * **[OllyDbg](https://www.ollydbg.de/)** a assembler level analyzing debugger
+  * **[TCPView](https://learn.microsoft.com/fr-fr/sysinternals/downloads/tcpview)** provides detailed listings of all TCP and UDP endpoints on your system.
+  * **[DiskMon](https://learn.microsoft.com/fr-fr/sysinternals/downloads/diskmon)** a system utility that logs and displays all hard disk activity
+  * **[PortMon](https://learn.microsoft.com/fr-fr/sysinternals/downloads/portmon)** a system utility for monitoring and logging serial and parallel port activity 
+  * **[Process Monitor](https://learn.microsoft.com/fr-fr/sysinternals/downloads/procmon)** an advanced monitoring tool for Windows that shows real-time file system, Registry, and process/thread activity
+
+## Links
+
+ * [Root me](https://www.root-me.org/)
+ * [Reverse engineering - Wikipedia](https://en.wikipedia.org/wiki/Reverse_engineering)

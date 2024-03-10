@@ -1,0 +1,27 @@
+# 🖧 Infra
+
+## EvoIT
+
+| Aspect               |  SysAdmin 💀 (1990 - 2010) | DevOps 🚀 (2015 - Present)|
+| :---                 | :---                       | :--- |
+| **Provisioning**     | SSH + Manual commands      | Infrastructure as Code (Terraform, ArgoCD) |
+| **Configuration**    | Custom Bash scripts        | Config Management (Ansible/Puppet) |
+| **Deployment**       | Manual FTP / SCP           | CI/CD Pipelines + GitOps |
+| **Scaling**          | Manual cloning / racking   | Auto-scaling & Kubernetes (K8s) |
+| **Monitoring**       | Nagios + Basic scripts     | Observability (Prometheus + Grafana) |
+| **Logging**          | SSH + `tail -f`            | Centralized Logs (ELK / Loki) |
+| **Backup**           | Cron jobs + Local scripts  | Automated Snapshots / Cloud Backup |
+| **Documentation**    | Static Wikis / Manual docs | Code is the documentation |
+| **Disaster Recovery**| Days (Manual rebuild)      | Minutes (Automated redeploy) |
+
+## Contents
+
+```{toctree}
+:titlesonly:
+:glob:
+
+data/index
+shell/index
+
+*
+```

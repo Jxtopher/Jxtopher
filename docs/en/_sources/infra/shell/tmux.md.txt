@@ -1,0 +1,52 @@
+# Tmux 
+
+{bdg-primary-line}`2024`
+
+## Basics
+
+* Create a new session name `abc`
+```bash
+tmux new -s abc -d
+```
+
+* View current sessions
+```bash
+tmux ls
+```
+
+* Create a new windows num `10` name `shell10` associated with a session
+```bash
+tmux new-window -t abc:10 -n shell10
+```
+
+* Send work in the windows `10`
+```bash
+tmux send-keys -t "abc:10" vim Enter
+tmux send-keys -t "abc:10" "cd / ; ls -la ; cd -" Enter
+```
+
+* Attached to the `abc` session
+```bash
+tmux attach -t abc
+```
+
+* Send a command to all panes
+```bash
+Ctrl-B :
+
+setw synchronize-panes on
+
+clear history
+```
+
+## Scripting
+
+* First script with tmux, the gold is to run multi-tasks interactively
+
+```bash
+tmux new -s abc -d
+for i in {1..10}; do
+    tmux new-window -t abc:$i -n "shell$i"
+    tmux send-keys -t "abc:$i" "cd / ; ls -la ; cd -" Enter
+done
+```

@@ -1,0 +1,119 @@
+# chroot jail
+
+{bdg-primary-line}`2010`
+
+## chroot
+
+
+`chroot` is a command that changes the root directory for run a process isolate  on the host machine.
+This isolates the execution of a program, preventing it from accessing the host machine's other directory.
+Which help to prevent malicious attacks such as buffer overflows.
+Chroot can also be used to run multiple instances of the same service or daemon on the same host machine.
+
+### `chroot` setup
+
+We are going to `chroot` a bash in the directory `/tmp/chroot`
+
+```bash
+mkdir /tmp/chroot
+cd /tmp/chroot
+```
+
+Let's get the dynamic links from the bash program to copy them to `/tmp/chroot` in their respective directories.
+
+```bash
+$ ldd /bin/bash
+linux-vdso.so.1 =>  (0x00007fffd5fff000)
+libncurses.so.5 => /lib/libncurses.so.5 (0x00007f6879f1d000)
+libdl.so.2 => /lib/libdl.so.2 (0x00007f6879d19000)
+libc.so.6 => /lib/libc.so.6 (0x00007f6879996000)
+/lib64/ld-linux-x86-64.so.2 (0x00007f687a181000)
+```
+
+Copy `bash` executable
+
+```bash
+mkdir bin
+cd bin
+cp /bin/bash .
+cd ..
+```
+
+Copy the dynamic libraries into the appropriate directories
+
+```bash
+mkdir lib
+cp /lib/libncurses.so.5 lib/.
+cp /lib/libdl.so.2 lib/.
+cp /lib/libc.so.6 lib/.
+cd ..
+mkdir lib64
+cp /lib64/ld-linux-x86-64.so.2 lib64/.
+cd
+```
+
+`chroot` activation
+
+```bash
+sudo chroot /tmp/chroot
+```
+
+## schroot
+
+`schroot` is an overlay of chroot and allows you to change the root directory to create an isolated environment.
+
+### Setup
+
+```bash
+sudo apt install schroot debootstrap
+```
+
+Go to a folder and download the operating system packages depending on the architecture (in our case 64 bits).
+
+```bash
+cd /tmp
+debootstrap --arch amd64 lenny debian64_apache http://http.us.debian.org/debian/
+```
+
+
+Configuring `schroot` edit file `/etc/schroot/schroot.conf`
+
+```vim
+[lenny]
+description=Debian lenny (testing)
+location=/tmp/debian32_apache
+type=directory
+users=luser
+root-groups=root
+root-users=root
+aliases=testing,default
+run-setup-scripts=true
+run-exec-scripts=true
+```
+
+### Start a service like `apache` via `schroot`
+
+Start the `schroot` which finds an identifier
+
+```bash
+schroot -b -c lenny
+```
+
+Starts the `apache` service in the `schroot`. ⚠ Retrieve the identifier given to you then replace `lenny-00e8c158-e183-48ad-8407-272808c6b0c6`
+
+```bash
+schroot -r -c lenny-00e8c158-e183-48ad-8407-272808c6b0c6 /etc/init.d/apache2 start
+```
+
+Log in to the `schroot`
+
+
+```bash
+schroot -r -c lenny-00e8c158-e183-48ad-8407-272808c6b0c6 -u \$USER
+```
+
+Stop the `schroot`
+
+```bash
+schroot -e -c lenny-00e8c158-e183-48ad-8407-272808c6b0c6
+```

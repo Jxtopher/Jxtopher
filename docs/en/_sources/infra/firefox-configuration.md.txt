@@ -1,0 +1,73 @@
+# Firefox configuration 
+
+{bdg-primary-line}`2023`
+
+## ⛨ Setup the blacklist in hosts file
+
+Adding https://someonewhocares.org/hosts/ in:
+* WIN : `C:\Windows\System32\drivers\etc`
+* LINUX : `/etc/hosts`
+
+```{figure} firefox-configuration/hosts-file.png
+:alt: Setup the blacklist in hosts file
+:class: bg-primary
+:align: center
+```
+
+
+## ⛨ Cookies and Site Data
+
+Configure you whitelist
+
+```{figure} firefox-configuration/cookies-and-site-data.png
+:alt: Cookies and Site Data
+:class: bg-primary
+:align: center
+```
+
+## ⛨ Extensions ublock and tree-style-tab
+
+```{figure} firefox-configuration/extensions.png
+:alt: Extensions ublock and tree-style-tab
+:class: bg-primary
+:align: center
+```
+
+## ⛨ Firefox Data Collection and Use
+
+```{figure} firefox-configuration/data-collection.png
+:alt: Firefox Data Collection and Use
+:class: bg-primary
+:align: center
+```
+
+## ⛨ Increase number of suggestion
+
+In about:config change
+ * browser.urlbar.maxRichResults = 20
+
+
+## ⛨ DNS over HTTPS
+
+You can customize with:
+* https://dns.google/dns-query
+
+```{figure} firefox-configuration/dns-over-http.png
+:alt: DNS over HTTPS
+:class: bg-primary
+:align: center
+```
+
+## ⛨ How to reduce height of bars
+
+First, go to `about:config` in your URL bar.
+Then, search for `browser.compactmode.show` and change the value to `true`.
+
+## ⚠ {bdg-primary-line}`Dev` Disable CORS
+
+In `about:config`
+* security.fileuri.strict_origin_policy = false
+
+## Refs
+
+* [Google Public DNS](https://en.wikipedia.org/wiki/Google_Public_DNS)
