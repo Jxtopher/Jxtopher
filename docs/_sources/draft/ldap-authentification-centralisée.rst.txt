@@ -1,0 +1,182 @@
+####################################
+ldap : authentification centralisée
+####################################
+
+L'annuaire est organiser comme une arboréssence, tout propriété du noeud n + 1 est appliquer au noeud n. La structure organisationnel de l'arbre de la racine aux feuilles est comme suit : organisation (dc), unité d'organisation (ou) et données spécifique (uid). Les fichiers de form **ldif** décrit une organation et les données pouvant être ajouté à l'annuaire.
+
+Installation Debian 9
+*********************
+
+.. code-block:: bash
+
+ apt-get install slapd ldap-utils
+
+Ajouter des unités d'organisation
+**********************************
+
+Ajouter l'unité d'organisation **people** à l'organisation nodomain :
+
+.. code-block:: bash
+
+ $ cat ou-people.ldif
+ dn: ou=people,dc=nodomain
+ objectClass: organizationalUnit
+
+ $ ldapadd -cxWD cn=admin,dc=nodomain -f ou-people.ldif
+
+Dans l'unité d'organisation **people**, on ajout deux unités d'organisations correspondant au département de l'entreprise : comptable, électricien.
+
+.. code-block:: bash
+
+ $ cat ou-departement.ldif
+ dn: ou=comptable, ou=people, dc=nodomain
+ objectClass: organizationalUnit
+
+ dn: ou=électricien, ou=people, dc=nodomain
+ objectClass: organizationalUnit
+
+ $ ldapadd -cxWD cn=admin, dc=nodomain -f ou-departement.ldif
+
+Pour visuler les nouvelles entrée :
+
+.. code-block:: bash
+
+ ldapsearch -LLL -x -H ldap:/// -b "dc=nodomain" -D cn=admin,dc=nodomain -W
+
+Ajouter des utilisateurs
+************************
+
+.. code-block:: bash
+
+ $ cat  users2.ldif
+ # Anakin Skywalker
+ dn: uid=anakin,ou=people,dc=nodomain
+ objectClass: inetOrgPerson
+ objectClass: shadowAccount
+ objectClass: posixAccount
+ cn: Anakin
+ sn: Anakin Skywalker
+ uid: anakin
+ uidNumber: 10001
+ gidNumber: 10001
+ loginShell: /bin/bash
+ homeDirectory: /ahome/anakin
+ # slappasswd -v -h "{SSHA}" -s Jxoqinda
+ userPassword: {SSHA}imZ91lYudpNprEw0r6mMZ3p0tR5e1NqF
+ gecos: Anakin Skywalker
+ telephoneNumber:0612141516
+ mail:anakin.skywalker@tuti.io
+
+ ldapadd -cxWD cn=admin,dc=nodomain -f users.ldif
+
+
+
+
+
+ldapsearch -LLL -H ldap://127.0.0.1  -b ou=xxx,ou=people,dc=nodomain -D cn=admin,dc=nodomain -W uid=anakin
+
+
+https://coagul.org/drupal/article/installation-et-utilisation-openldap-sous-debian
+https://www.inetdoc.net/pdf/sysadm-net.ldap.qa.pdf
+https://wiki.gentoo.org/wiki/Centralized_authentication_using_OpenLDAP/fr
+
+Clients
+*******
+
+phpldapadmin
+============
+
+LDAP Admin
+===========
+
+http://www.ldapadmin.org
+
+Remplire les champs suivant pour zone **Connection**:
+ * Host : 127.0.0.1
+ * Port : 389
+ * Version : 3
+ * Base: DC=domain, DC=com
+
+Pour se connecter avec le compte administrateur
+ * Username : CN=administrator, CN=users, DC=domaine,DC=com
+ * Password : ********
+
+
+Identification LDAP avec PAM
+============================
+
+
+Le paquet libnss-ldap fournit un service de nommage. Les paquets libpam-cracklib et libpam-pwdb sont utilisés par PAM-LDAP pour l'authentification.
+
+.. code-block:: bash
+
+ apt-get install libnss-ldap
+
+
+
+.. code-block:: bash
+
+ # cat /etc/pam_ldap.conf
+ base dc=linuxwall,dc=info
+
+ uri ldap://127.0.0.1/
+
+ ldap_version 3
+
+ rootbinddn cn=admin,dc=linuxwall,dc=info
+ port 389
+
+ scope sub
+ bind_timelimit 30
+ idle_timelimit 3600
+ pam_filter objectclass=posixaccount
+ pam_login_attribute uid
+ pam_password crypt
+
+Le fichier contentant le mot de passe d'autentification au serveur ldap
+
+.. code-block:: bash
+
+ #  chmod 0400 /etc/pam_ldap.secret
+
+Ajouter dans chacun des fichiers suivant :
+
+ * /etc/pam.d/common-auth
+ * /etc/pam.d/common-account
+ * /etc/pam.d/common-session
+
+La ligne suivante :
+
+.. code-block:: bash
+
+ session sufficient pam_ldap.so
+
+Nous utilisons le mode **sufficient** pour s'authentifier avec un compte local (**/etc/passwd**) si le serveur n'est plus disponible.
+
+
+Ajouter la ligne ci-dessous dans le fichier /etc/pam.d/common-password :
+
+.. code-block:: bash
+
+ password sufficient pam_ldap.so use_first_pass
+
+
+Redémarrer la machine et tester l'autentification ldap.
+
+https://wiki.debian.org/fr/LDAP/PAM
+http://wiki.linuxwall.info/doku.php/fr:ressources:articles:pam_ldap
+
+Script - python3
+=================
+
+
+.. code-block:: bash
+
+ apt-get install libldap2-dev libsasl2-dev #python3-pip
+ pip3 install python-ldap
+
+
+
+-------------------------
+
+Juillet 2018
