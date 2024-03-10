@@ -1,0 +1,38 @@
+---
+hide-toc: true
+---
+
+# Welcome 👋
+
+```{toctree}
+:hidden:
+
+curiosity/index
+```
+
+```{toctree}
+:hidden:
+
+dev/index
+```
+
+```{toctree}
+:hidden:
+
+sysadmin/index
+```
+
+{bdg-primary-line}`2025`
+
+- [Database disk footprint](sysadmin/db%20disk%20footprint.md)
+- [Getting started apache kafka](dev/getting-started-apache-kafka.md)
+- [Rerverse engineering](dev/reverse-engineering.md)
+
+{bdg-primary-line}`2024`
+
+- [N-Queens with SAT Solver](curiosity/n-queens-with-sat-solver.md)
+- [App configuration](dev/app%20configuration.md)
+- [profiling-tools.md](dev/profiling-tools.md)
+- [backup and integrity](sysadmin/data/backup%20and%20integrity.md)
+- [zpool setup](sysadmin/data/zpool.md)
+- [Tmux](sysadmin/shell/tmux.md)
