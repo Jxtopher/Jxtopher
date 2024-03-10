@@ -1,0 +1,212 @@
+# Workstation config
+
+{bdg-primary-line}`2018`
+
+## General aspect
+
+* `f.Lux` adds visual comfort to the display level. The tool regulates the amount of blue color automatically during the day.
+* High resolution screen (4K) reduces visual fatigue.
+* For laptops, in the case of office applications, matte panel screens are preferred.
+*Each position must have an identifiable name.
+
+## Software
+
+* Office:
+  * pdf : Gaaiho reader, Acrobat Reader, evince, PDFcreator, Pdf Stream Dumper, PDF blender (fusion de pdf)
+  * djvu : DjView
+  * epub : Adobe Digital Editions
+  * Ghostscript
+  * EPS : EPS Viewer
+  * Word : libreOffice, MiKTeX, Texmaker, JabRef, Notepad++
+  * Image processing : GIMP, Inkscape (SVG), Pencil
+  * Personal accounting : MoneyManagerEX
+
+* AdminSys:
+  * Cisco Packet Tracer
+  * LiLi USB Creator
+  * mRemoteNG, X2Go Client, Tera Term
+  * VirtualBox
+  * Unified Remote
+  * Wireshark
+
+* Web clients:
+  * ftp : FileZilla
+  * browser : Opera, Chrome, Firefox
+  * messaging : qTox, Skype, Slack
+  * e-mail : Thunderbird
+  * Dropbox, MEGAsync
+
+* Dev:
+  * make, cmake
+  * git
+  * java, SWI-Prolog, NetLogo, R
+  * Qt
+  * Atom, NetBeans, Rstudio
+  * IDA Pro free
+  * pgAdmin
+
+* Music : audacity, LMMS, MuseScore, VLC
+
+* Data processing
+  * GeoGebra
+  * Gephi
+  * logisim
+  * QGis
+  * CSVed
+
+* Security:
+  * KeePass
+  * Kleopatra
+
+## Backups
+
+Data is backup every day to a remote file server. Incremental backup is preferred, it has the advantage of being the fastest. On the other hand, the restoration time is harder depending on the number of incremental backups carried out after a full backup. Please note that before traveling, a complete backup must be made. We use the command `dar`.
+
+A complete backup of the *DIR_SOURCE* directory is performed. The backup is stored in the *DIR_BACKUP* directory. A hash of the backup is calculated.
+
+```bash
+dar -R DIR_SOURCE -c DIR_BACKUP/NAME_BACKUP-000-full-$DATE --hash md5 -q
+```
+
+To make a complete backup of the `DIR_SOURCE` directory on the remote server `127.0.0.1` using the ssh protocol. The destination directory is `SSH_BACKUP_PATH`.
+
+```bash
+SSH_BACKUP_LOGIN=user@127.0.0.1
+dar -R DIR_SOURCE -c - --hash md5 -q | ssh $SSH_BACKUP_LOGIN "cat > $SSH_BACKUP_PATH/$NAME_BACKUP-full-$DATE.1.dar"
+```
+
+
+## Integrity
+
+For directories that change little over time, it is recommended to hash the files to verify their integrity, as physical media degrades over time and file system error detection and correction programs have variable effectiveness. By combining this with multi-media backup (SSH, HDD, optical disk, or magnetic tape), data loss can be minimized. Each storage medium has different physical constraints and degradation times, so the probability of all media failing at the same time is lower the more different types of media are used.
+
+## Password management
+
+All passwords must be saved in an encrypted file. If the file is stolen, the hacker will have more difficulty learning the passwords. Because passwords are saved to a file, they can be longer and more complex. Authentications are more secure. We use double authentication to access passwords: by file containing random characters and by passwords. The password manager `KeePass` is suitable for this job.
+
+Password management is organized into three levels:
+
+ 1. very sensitive and little used like bank passwords,
+ 2. sensitive and used as site login passwords,
+ 3. client passwords, widely used, access to servers, applications, etc...
+
+KeePass : https://keepass.info/
+
+## Blacklist : hosts
+
+In order to reduce advertisements and malicious sites, sites offer blacklists blocking similar domain names. The files must therefore be completed:
+
+* linux : `/etc/hosts`
+* windows : `C:\Windows\System32\drivers\etc\hosts`
+
+See : https://someonewhocares.org/hosts/
+
+To add as a browser plug-in:
+
+* uBlock Origin
+
+## Setting up a proxy
+
+- Download and install Squid (http://squid.diladele.com/#home)
+
+## Domain blacklist
+
+1. Edit the /etc/squid/squid.conf file and add the following settings:
+
+```bash
+acl domain_blacklist dstdomain "/etc/squid/domain_blacklist"
+http_access deny all domain_blacklist
+```
+
+2. Create the /etc/squid/domain_blacklist.txt file and add the domains you want to block. For example, to block access to example.com including subdomains and to block example.net add:
+ 
+```vim
+ .example.com
+ example.net
+```
+
+3. Restart the server, the `domain_blacklist` file must not be empty.
+
+## Firewall on Linux
+
+{bdg-danger}`Deprecated`
+
+Installation of the `iptables-persistent` package for automatic implementation of iptables settings at startup.
+
+```bash
+apt install iptables-persistent
+```
+
+Addition of basic rules in iptables for IPv4:
+
+```bash
+# Loopback
+iptables -A INPUT -d 127.0.0.0/8 -j ACCEPT
+
+# Authorization of new connections from the machine and not from outside
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+```
+
+In order to make the rules added in iptables permanent, they are saved in the *rules.v4* file 
+
+```bash
+iptables-save > /etc/iptables/rules.v4
+ip6tables-save > /etc/iptables/rules.v6
+```
+
+Addition of basic rules in iptables for IPv6:
+
+```bash
+# Loopback
+ip6tables -A INPUT -d ::1/128 -j ACCEPT
+
+# Authorization of new connections from the machine and not from outside
+ip6tables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+ip6tables -A OUTPUT -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+```
+
+In order to make the rules added in ip6tables permanent, they are saved in the *rules.v4* file
+
+Le service peut ensuite être démarrer
+
+```bash
+service netfilter-persistent start
+```
+
+Example of rules:
+
+
+```bash
+#SSH
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 1723 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+#SAMBA
+iptables -A INPUT -p udp -s 192.168.1.0/24 -d 192.168.1.198/32 -m udp --dport 137 -j ACCEPT
+iptables -A INPUT -p udp -s 192.168.1.0/24 -d 192.168.1.198/32 -m udp --dport 138 -j ACCEPT
+iptables -A INPUT -m state -s 192.168.1.0/24 -d 192.168.1.198/32 --state NEW -m tcp -p tcp --dport 139 -j ACCEPT
+iptables -A INPUT -m state -s 192.168.1.0/24 -d 192.168.1.198/32 --state NEW -m tcp -p tcp --dport 445 -j ACCEPT
+
+#HTTPS
+iptables -A INPUT -p tcp -s 192.168.1.198/32 -d 192.168.1.198/32	--dport 80 -j ACCEPT
+iptables -A INPUT -p tcp -s 192.168.1.198/32 -d 192.168.1.198/32	--dport 443 -j ACCEPT
+
+#Proxy
+iptables -A INPUT -p tcp -s 192.168.1.198/32 -d 192.168.1.198/32  --dport 3128 -j ACCEPT
+```
+
+When an `ssh` server is installed on the machine, you must use a tool that prevents strong password brute-forcing such as `denyHosts` or `fail2ban`. This tool is useless when password authentication is disabled.
+
+## Authority certificate import
+
+* On Windows open `certmgr.msc` and add the certificate
+
+```{image} workstation-config/certmgr.png
+:width: 100%
+```

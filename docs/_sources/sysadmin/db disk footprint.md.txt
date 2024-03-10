@@ -1,0 +1,204 @@
+# Database disk footprint
+
+{bdg-primary-line}`2025`
+
+Databases are widely used throughout the world,.
+The most popular are relational databases like Oracle, Mysql and PostgreSQL.
+But also non-relational databases such as Mongodb, Cassandra and Redis.
+There are many others used in various contexts and various types.
+
+The purpose of this article is to analyse the disk footprint of databases like Mysql and PostgreSQL, also providing a brief comparison with SQLite and MongoDB.
+
+## Experimental setup
+
+In this expeirments, we used MySql version 15.1 and PostgreSQL version 15.13 with default settings.
+We created an empty database with one table name `footprint` without index.
+The table has three columns: `id`, `type` and `footprint`.
+The size in bytes for for the first two fields is respsectively 4 and 5.
+The `fingerprint` field stores binary data and its size varies depending on the inserted line.
+
+The definition in SQL of the table is as follows:
+
+::::{tab-set}
+:::{tab-item} MySQL
+:sync: tab1
+
+```sql
+CREATE TABLE footprint (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type CHAR(5),
+    footprint BLOB
+);
+```
+
+:::
+:::{tab-item} PostgreSQL
+:sync: tab2
+
+```sql
+CREATE TABLE footprint (
+    id SERIAL PRIMARY KEY,
+    type CHAR(5),
+    footprint BYTEA
+);
+```
+
+:::
+::::
+
+In the experiments, we insert rows in batches with random data based on parameters such as the blob size.
+For a total amount of data to insert, we measure the disk footprint in the contents folder the table data.
+
+## Parameters studied
+
+We study the impact of several parameters ([tab. parameters studied](#parameters-studied)), 
+and in particular the impact on the disk footprint of parameter `blob size`.
+
+```{table} List of parameters studied
+:name: parameters-studied
+
+|         Name        |   Default value    | Description                                      |
+|---------------------|--------------------|--------------------------------------------------|
+| Blob size           | [500, 40000] Bytes | Blob size                                        |
+| Batch size          | 1 row              | Number of lines to insert then commit at the end |
+| Total inserted size | 1 Go               | Total amount of data inserted for one run        |
+| innodb_page_size    | 16KB               | Only MariaDB: innodb page size                   |
+```
+
+Depending on the experiment, the size of the blob, at each insertion the size may be the same or follow a distribution law with a mean and a standard deviation.
+
+For a comprehensive comparison, we evaluate MariaDB v15.1, MongoDB v8.0.12, PostgreSQL v15.13, and SQLite3 across various scenarios. The execution environment is Debian 12 (bookworm).
+
+## Results
+
+### Table size growth dynamics
+
+We analyze the growth dynamics of the disk footprint ([fig. dynamics](#dyamic-footprint-growth)), we insert data in batches of rows,
+in our case the batch size is 1 and the number of bytes per line is fixed.
+We observe that whatever the size of the blob and the database, the footprint growth is linear.
+
+```{subfigure} AB
+:layout-sm: A|B
+:gap: 10px
+:align: center
+:width: 95%
+:name: dyamic-footprint-growth
+![](db-disk-footprint/dynamic-mairadb-v15-1.svg)
+![](db-disk-footprint/dynamic-pgsql-v15-13.svg)
+
+Dynamic of disk fooprint for different blob size, in left MariaDB and in right PgSQL.
+```
+
+### Blob field: uniform size
+
+We analyse the impact on the footprint in function of the uniform blob size with total amount inserted data is 1Go.
+We insert and commit each lines with a spcific blob size.
+
+::::{tab-set}
+:::{tab-item} MySQL and PostgreSQL
+:sync: tab1
+
+```{subfigure} AB
+:layout-sm: A|B
+:gap: 10px
+:align: center
+:width: 95%
+![](db-disk-footprint/disk-size-in-function-of-blob-size-mariadb.svg)
+![](db-disk-footprint/disk-size-in-function-of-blob-size-pgsql.svg)
+
+Disk fooprint in function of the blob size, in left MariaDB and in right PgSQL.
+```
+
+:::
+:::{tab-item} SQLite3
+:sync: tab2
+
+```{subfigure} A
+:layout-sm: A
+:gap: 10px
+:align: center
+:width: 95%
+![](db-disk-footprint/disk-size-in-function-of-blob-size-sqlite3.svg)
+
+Disk fooprint in function of the blob size for SQLite3.
+```
+
+:::
+:::{tab-item} MongoDB
+:sync: tab3
+
+```{subfigure} A
+:layout-sm: A
+:gap: 10px
+:align: center
+:width: 95%
+![](db-disk-footprint/disk-size-in-function-of-blob-size-mongodb.svg)
+
+Disk fooprint in function of the blob size for MongoDB.
+```
+
+:::
+::::
+
+In function of the blob size, we observe the following elements:
+
+- For MariaDB, the disk footprint to a significant impact on specific blob sizes: `5250`.
+- For PgSQL, the disk footprint is limited impact especially when the blob size is greater than 8000 Bytes.
+
+Besides, disk footprint variations, disk space consumption for mariadb can be up to double the space compared to the total amount inserted.
+
+### MariaDB: innodb_page_size
+
+The `innodb_page_size` parameter defines the page size for the InnoDB engine. Defaulting to 16KB, it's recommended, according to the documentation, to align it with your storage device's block size.
+
+Depending on the `innodb_page_size` parameter, the impact on disk space varies significantly.
+For example, with a 5250-byte BLOB and a page size increased from 16KB to 64KB, we can reduce the disk footprint by `26%`.
+However, if this parameter is misconfigured, it can lead to significant disk space over-consumption. This is the case with BLOBs of 16,500 bytes, resulting in a consumption factor of 4.
+
+| innodb_page_size | 5250 | 16500 |
+| :--------------: | :--: | :---: |
+|      16          | 1.58 | 2.01  |
+|      32          | 1.28 | 2.03  |
+|      64          | 1.18 | 4.04  |
+
+
+```{subfigure} AB
+:layout-sm: A|B
+:gap: 10px
+:align: center
+:width: 95%
+![](db-disk-footprint/disk-size-in-function-of-blob-size-mariadb-innodb_page_size-bigpicture.svg)
+![](db-disk-footprint/disk-size-in-function-of-blob-size-mariadb-innodb_page_size-zoom.svg)
+
+Disk fooprint in funciton of the blob size by `innodb_page_size` parameter for Mariadb,
+in left bigpicutre and in right zoom on the blob size range value: [500, 15000].
+```
+
+In conclusion, it's necessary to analyze the distribution of your data samples to effectively determine the optimal value for this parameter, as there is a sensitivity to this parameter that can positively or negatively affect the disk footprint.
+If the statistical distribution of blob sizes cannot be determined, it is generally best to retain the default or recommended configuration.
+
+### Store data in an orderly manner
+
+When we use variable sized blobs,
+the order in which they are inserted into the table can influence its disk footprint size.
+In the [figure](#impact-of-ordering-on-disk-footprint), we notice that a ordered set by blob sizes results in a smaller disk footprint compared to a random ordering.
+
+```{subfigure} A
+:layout-sm: A
+:gap: 10px
+:align: center
+:width: 95%
+:name: impact-of-ordering-on-disk-footprint
+![](db-disk-footprint/dynamic-mairadb-1Go-partially-ordered-set.svg)
+
+Dynamic of disk fooprint for uniform distribution blob size dataset betwen `[4250, 6250]` in Mariadb.
+```
+
+The question we can ask ourselves is whether there is a better ordering relationship that allows us to minimize the disk footprint.
+
+
+## Links
+
+- [MariaDB](https://mariadb.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [A Performance Benchmark for the PostgreSQL and MySQL Databases](https://www.mdpi.com/1999-5903/16/10/382)

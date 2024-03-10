@@ -1,0 +1,113 @@
+# Monitoring tools
+
+{bdg-primary-line}`2022`
+{bdg-primary-line}`Debian`
+
+## htop
+
+```bash
+htop
+```
+
+```{image} monitoring-tools/htop.png
+:alt: htop
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+
+## top
+
+```bash
+top
+```
+
+```{image} monitoring-tools/top.png
+:alt: top
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+
+## ps
+
+```bash
+ps -fe
+```
+
+```{image} monitoring-tools/ps-fe.png
+:alt: ps -fe
+:class: bg-primary
+:width: 80%
+:align: center
+```
+
+## dstat
+```bash
+dstat -tdmsync
+```
+
+```{image} monitoring-tools/dstat-tdmsync.png
+:alt: dstat -tdmsync
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+
+## btop
+```bash
+btop
+```
+
+```{image} monitoring-tools/btop.png
+:alt: btop
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+
+## iostat
+
+```bash
+apt install sysstat
+iostat
+```
+
+```{image} monitoring-tools/iostat.png
+:alt: iostat
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+
+## mpstat
+
+```bash
+mpstat 2
+```
+
+```{image} monitoring-tools/mpstat2.png
+:alt: iostat 2
+:class: bg-primary
+:width: 100%
+:align: center
+```
+
+## netstat
+
+```bash
+apt install net-tools
+mpstat 2
+```
+
+```{image} monitoring-tools/netstat.png
+:alt: netstat
+:class: bg-primary
+:width: 100%
+:align: center
+```

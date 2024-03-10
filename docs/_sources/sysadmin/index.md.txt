@@ -1,0 +1,12 @@
+
+# SysAdmin
+
+```{toctree}
+:titlesonly:
+:glob:
+
+data/index
+shell/index
+
+*
+```
