@@ -1,0 +1,10 @@
+# Game of life
+
+
+
+
+```{toctree}
+:titlesonly:
+
+game-of-life/plot_n3/plot_n3.md
+```
