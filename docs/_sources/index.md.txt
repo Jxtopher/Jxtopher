@@ -1,0 +1,23 @@
+---
+hide-toc: true
+---
+
+# Welcome 👋
+
+```{toctree}
+:hidden:
+
+curiosity/index
+```
+
+```{toctree}
+:hidden:
+
+dev/index
+```
+
+```{toctree}
+:hidden:
+
+sysadmin/index
+```
