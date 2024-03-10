@@ -1,0 +1,17 @@
+
+# Dev
+
+## Contents
+```{toctree}
+:titlesonly:
+:glob:
+
+*
+```
+
+## Books
+
+- Knuth - 1997 - The Art of Computer Programming v1 Fundamental Algorithms
+- Knuth - 1997 - The Art of Computer Programming v2 Seminumerical Algorithms
+- Knuth - 1997 - The Art of Computer Programming v3 Sorting and Searching
+- Garey, Johnson - 1979 - computers and intractability
