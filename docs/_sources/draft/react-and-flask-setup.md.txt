@@ -1,0 +1,20 @@
+# React and Flask start from scratch
+
+## React with Typescript
+
+```shell
+npx create-react-app demo-app-ux --template typescript
+```
+
+Adding Boostrap
+
+## Flask
+
+```shell
+poetry new demo-app-be
+```
+
+## Setup CI - Github actions
+
+
+## Setup CD

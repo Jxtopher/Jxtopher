@@ -1,0 +1,110 @@
+# NASM - Hello, World
+
+{bdg-primary-line}`2010`
+
+## Hello, World [windows]
+
+This snippet of assembly language code prints the message "Hello, World!" using a dynamically linked library (for the `_printf` function). The arguments to the `_printf` function are pushed onto the stack.
+
+```vim
+ global	_main
+	extern	_printf
+	extern _exit
+
+	section .data
+
+	message	db	'Hello, World', 10, 0
+
+	section .text
+ _main:
+	push	message
+	call	_printf
+
+	xor eax, eax
+	push eax
+	call _exit
+```
+
+In link time, `libcrtdll.a` is adding, this library contains `_printf` and `_exit` function.
+
+```bash
+nasm -f win32 hellworld.asm
+ld hellworld.o libcrtdll.a -o hellworld
+```
+
+Alternatively, you can compile using `gcc` instead of `ld`.
+
+```bash
+nasm -f win32 hellworld.asm
+gcc hellworld.o
+```
+
+## Static and dynamic library
+
+### Create liberary
+
+* Writing function `myFunction` in assembler
+
+```vim
+; file : libHello.asm
+BITS 64
+
+section .data
+  hello db \"Hello World !\", 0xa
+  len equ $ - hello
+
+section .text
+  global      myFunction:function
+
+  myFunction:
+    mov rax, 4
+    mov rbx, 1
+    mov rcx, QWORD hello
+    mov rdx, len
+    int 0x80
+    ret
+```
+
+* Compiling the library statically
+
+```bash
+nasm -f elf64 libHello.asm
+ar rcs libHello.a libHello.o
+```
+
+* Compiling the dynamic library
+
+```bash
+nasm -f elf64 libHello.asm
+ld -shared -o libHello.so libHello.o
+```
+
+### Example of library uses
+
+* C code using a library function
+
+```c
+// file :  main.c
+int main(int argc, char **argv) {
+  myFunction();
+  return 0;
+}
+```
+
+* Compiling with the static library
+
+```bash
+gcc -static main.c -L. libHello.a -o statically_linked
+```
+
+* Compiling with the dynamic library
+
+```bash
+gcc main.c -o dynamically_linked -L -l c_printf.so.1.0.1
+```
+
+## Refs
+
+* [Create a shared and static library with the gnu compiler](http://www.adp-gmbh.ch/cpp/gcc/create_lib.html)
+* [Dynamic loading](http://en.wikipedia.org/wiki/Dynamic_loading)
+* [dlsym](http://www.opengroup.org/onlinepubs/009695399/functions/dlsym.html)
